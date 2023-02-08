@@ -1,0 +1,319 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 key pair for SSH access to the EC2 instance.
+    Type: AWS::EC2::KeyPair::KeyName
+
+  SSHLocation:
+    Description: The IP address range that can be used to SSH to the EC2 instances
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+
+  ImageId:
+    Description: EC2 Image ID - leave default for latest Amazon Linux 2 image
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+Resources:
+  FinalProjectVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: FinalProjectVPC
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [0, !GetAZs ]
+      VpcId: !Ref FinalProjectVPC
+      CidrBlock: 10.0.1.0/24
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet1
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [1, !GetAZs ]
+      VpcId: !Ref FinalProjectVPC
+      CidrBlock: 10.0.2.0/24
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet2
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [0, !GetAZs ]
+      VpcId: !Ref FinalProjectVPC
+      CidrBlock: 10.0.3.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [1, !GetAZs ]
+      VpcId: !Ref FinalProjectVPC
+      CidrBlock: 10.0.4.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: PublicSubnet2
+
+  FinalProjectIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: IGW-FinalProject
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref FinalProjectVPC
+      InternetGatewayId: !Ref FinalProjectIGW
+
+  PublicRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref FinalProjectVPC
+      Tags:
+        - Key: Name
+          Value: FinRT-public
+
+  Route:
+    Type: "AWS::EC2::Route"
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRT
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref FinalProjectIGW
+
+  PublicRT1Association:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRT
+
+  PublicRT2Association:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRT
+
+  PrivateRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref FinalProjectVPC
+      Tags:
+        - Key: Name
+          Value: FinRT-private
+
+  PrivateRT1Association:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRT
+
+  PrivateRT2Association:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRT
+
+# EC2
+# Secutity Groups
+  WebSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP and DNS(UDP) access on the inbound port
+      GroupName: FinalProject-WebServer-SG
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: 53
+          ToPort: 53
+          CidrIp: 0.0.0.0/0      
+      Tags:
+          - Key: Name
+            Value: FinalProject-WebServer-SG
+      VpcId: !Ref FinalProjectVPC
+    
+  SSHSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP and DNS(UDP) access on the inbound port
+      GroupName: FinalProject-SSH-SG
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLocation
+      Tags:
+          - Key: Name
+            Value: FinalProject-SSH-SG
+      VpcId: !Ref FinalProjectVPC
+
+  EC2toRDSSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow connections to DB from any instances this security group is attached to
+      GroupName: EC2-RDS-SG
+      Tags:
+          - Key: Name
+            Value: FinalProject-EC2-RDS-SG
+      VpcId: !Ref FinalProjectVPC
+
+  EC2toRDSegress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref EC2toRDSSG 
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      DestinationSecurityGroupId: !Ref RDStoEC2SG
+
+  RDStoEC2SG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow EC2 instances with specific security groups attached to connect to the database.
+      GroupName: RDS-EC2-SG
+      Tags:
+          - Key: Name
+            Value: FinalProject-RDS-EC2-SG
+      VpcId: !Ref FinalProjectVPC
+
+  RDStoEC2ingress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref RDStoEC2SG
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      SourceSecurityGroupId: !Ref EC2toRDSSG
+   
+  FinalProjectWebServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref WebSG
+        - !Ref SSHSG
+        - !Ref EC2toRDSSG
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: FinalProject-WebServer
+
+# RDS
+  DBSubnetGroup1:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for db-FinalProject
+      DBSubnetGroupName: db-FinalProject-subnet-group
+      SubnetIds: # Required
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+      Tags:
+        - Key: Name
+          Value: db-FinalProject-subnet-group
+        
+  FinalProjectDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 20
+      DBName: FinalProject_db
+      VPCSecurityGroups:
+        - !Ref RDStoEC2SG
+      Engine: postgres
+      DeletionPolicy: Retain
+      DBSubnetGroupName: !Ref DBSubnetGroup1
+      DBInstanceClass: db.t4g.micro
+      DBInstanceIdentifier: db-FinalProject1
+      MasterUsername: postgres
+      MasterUserPassword: postgres
+      Tags:
+        - Key: Name
+          Value: FinalProject_db
+
+      # AutoMinorVersionUpgrade: false
+      # AvailabilityZone: "String"
+      # BackupRetentionPeriod: Number
+      # CACertificateIdentifier: "String"
+      # CertificateDetails:
+      #   CAIdentifier: "String"
+      #   ValidTill: "String"
+      # CertificateRotationRestart: String
+      # CharacterSetName: "String"
+      # CopyTagsToSnapshot: false
+      # CustomIAMInstanceProfile: "String"
+      # DBClusterIdentifier: "String"
+      # DBClusterSnapshotIdentifier: "String"
+
+
+      # DBParameterGroupName: "String"
+      # DBSnapshotIdentifier: "String"
+
+      # DeleteAutomatedBackups: false
+      # DeletionProtection: false
+      # Domain: "String"
+      # DomainIAMRoleName: "String"
+      # EnableCloudwatchLogsExports:
+      #   EnableCloudwatchLogsExports
+      # EnableIAMDatabaseAuthentication: false
+      # EnablePerformanceInsights: false
+
+      # EngineVersion: "String"
+      # Iops: Number
+      # KmsKeyId: "String"
+      # LicenseModel: "String"
+      # ManageMasterUserPassword: false
+      # MasterUserSecret:
+      #   KmsKeyId: "String"
+      #   SecretArn: "String"
+      # MaxAllocatedStorage: Number
+      # MonitoringInterval: Number
+      # MonitoringRoleArn: "String"
+      # MultiAZ: false
+      # NcharCharacterSetName: "String"
+      # NetworkType: "String"
+      # OptionGroupName: "String"
+      # PerformanceInsightsKMSKeyId: "String"
+      # PerformanceInsightsRetentionPeriod: Number
+      # Port: "String"
+      # PreferredBackupWindow: "String"
+      # PreferredMaintenanceWindow: "String"
+      # ProcessorFeatures:
+      #   ProcessorFeatures
+      # PromotionTier: Number
+      # PubliclyAccessible: false
+      # ReplicaMode: "String"
+      # RestoreTime: "String"
+      # SourceDBInstanceAutomatedBackupsArn: "String"
+      # SourceDBInstanceIdentifier: "String"
+      # SourceDbiResourceId: "String"
+      # SourceRegion: "String"
+      # StorageEncrypted: false
+      # StorageThroughput: Number
+      # StorageType: "String"
+
+      # Timezone: "String"
+      # UseDefaultProcessorFeatures: false
+      # UseLatestRestorableTime: false
+
