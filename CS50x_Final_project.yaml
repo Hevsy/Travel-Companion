@@ -242,7 +242,6 @@ Resources:
       VPCSecurityGroups:
         - !Ref RDStoEC2SG
       Engine: postgres
-      DeletionPolicy: Retain
       DBSubnetGroupName: !Ref DBSubnetGroup1
       DBInstanceClass: db.t4g.micro
       DBInstanceIdentifier: db-FinalProject1
@@ -251,6 +250,7 @@ Resources:
       Tags:
         - Key: Name
           Value: FinalProject_db
+    DeletionPolicy: Retain
 
       # AutoMinorVersionUpgrade: false
       # AvailabilityZone: "String"
