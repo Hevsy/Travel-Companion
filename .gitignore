@@ -3,4 +3,3 @@ etc/__pycache__/
 flask_session/
 .a.py.swp
 venv/
-venv
