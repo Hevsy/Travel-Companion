@@ -1,3 +1,4 @@
+# Funtions to get parameters from AWS SSM Parameter store
 # import boto3
 
 # def param_get(param_name):
@@ -9,16 +10,17 @@
 
 
 db_config = {
-    "db_type" : "mysql+mysqlconnector", 
-    "db_username" : "root", 
-    "db_pass" : "",
-    "db_host" : "localhost"
+    "db_type": "mysql+mysqlconnector",
+    "db_username": "root",
+    "db_pass": "",
+    "db_host": "localhost",
+    "db_file": "project-tc"
 }
 
 db_config_test = {
-    "db_type" : "sqlite", 
-    "db_username" : None, 
-    "db_pass" : None, 
-    "db_host" : None, 
-    "db_file" :"finance.db"
+    "db_type": "sqlite",
+    "db_username": None,
+    "db_pass": None,
+    "db_host": None,
+    "db_file": "finance.db"
 }
