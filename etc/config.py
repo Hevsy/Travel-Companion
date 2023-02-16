@@ -9,15 +9,11 @@
 
 
 db_config = {
-    "db_type" : "postgresql+psycopg2", 
-    "db_username" : "postgres", 
-    "db_pass" : "postgres"
-    "db_host" : "db-finance1.cxhmztea6vcv.us-east-1.rds.amazonaws.com", 
-    "db_file" :"finance"
+    "db_type" : "mysql+mysqlconnector", 
+    "db_username" : "root", 
+    "db_pass" : "",
+    "db_host" : "localhost"
 }
-
-API_KEY = param_get('finance_api-key')
-# print (API_KEY, db_config)
 
 db_config_test = {
     "db_type" : "sqlite", 

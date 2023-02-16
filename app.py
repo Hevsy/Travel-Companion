@@ -1,7 +1,9 @@
-from sqlalchemy import URL, create_engine
+from sqlalchemy import URL, create_engine, text
+from sqlalchemy_utils import database_exists, create_database
 from etc.config import db_config
 from flask import Flask, redirect, render_template, request
 from flask_session import Session
+from functions import login_required, apology
 
 # Configure application
 app = Flask(__name__)
@@ -21,15 +23,15 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# import db config from etc/config
+# Configure DB connection
+# Import db config from etc/config
 db_type = ""
 db_file = db_username = db_pass = db_host = None
 # Assign variables from db_config
 for item in db_config:
     exec('{KEY} = {VALUE}'.format(KEY=item, VALUE=repr(db_config[item])))
 # Create db URL & engine
-db_url = URL.create(db_type, database=db_file,
-                    username=db_username, password=db_pass, host=db_host)
+db_url = URL.create(db_type, username=db_username, password=db_pass, host=db_host)
 
 engine = create_engine(db_url)
 
