@@ -1,4 +1,6 @@
-from flask import Flask, redirect, render_template, request, session
+from sqlalchemy import URL, create_engine
+from etc.config import db_config
+from flask import Flask, redirect, render_template, request
 from flask_session import Session
 
 # Configure application
@@ -13,27 +15,24 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# # import db config from etc/config
-# from etc.config import db_config
-# db_type = None
-# db_file = None
-# db_username = None
-# db_pass = None 
-# db_host = None
+# import db config from etc/config
+db_type = ""
+db_file = db_username = db_pass = db_host = None
+# Assign variables from db_config
+for item in db_config:
+    exec('{KEY} = {VALUE}'.format(KEY=item, VALUE=repr(db_config[item])))
+# Create db URL & engine
+db_url = URL.create(db_type, database=db_file,
+                    username=db_username, password=db_pass, host=db_host)
 
-# # Assign variables from db_config
-# for item in db_config:
-#     exec('{KEY} = {VALUE}'.format(KEY = item, VALUE = repr(db_config[item])))
+engine = create_engine(db_url)
 
-# # Create db URL & engine
-# db_url = URL.create(db_type, database = db_file, username = db_username, password = db_pass, host = db_host)
-# engine = create_engine(db_url)
-    
 
 @app.route("/")
 def index():
@@ -56,8 +55,9 @@ def register():
 
         # Check if username already exists
         with engine.begin() as db:
-            result = db.execute(text('SELECT id FROM users WHERE username = :u'), {'u': username})
-            print (result.rowcount)
+            result = db.execute(
+                text('SELECT id FROM users WHERE username = :u'), {'u': username})
+            print(result.rowcount)
             if result.rowcount > 0:
                 # return apology("Username already exists")
                 return apology("Username already exists")
