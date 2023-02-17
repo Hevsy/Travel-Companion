@@ -1,4 +1,4 @@
-from sqlalchemy import URL, create_engine, text
+from sqlalchemy import URL, create_engine, text, MetaData, Table, Column, Integer, String, DeclarativeBase
 from sqlalchemy_utils import database_exists, create_database
 from etc.config import db_config
 from flask import Flask, redirect, render_template, request
@@ -39,7 +39,19 @@ engine = create_engine(db_url)
 if not database_exists(engine.url):
     create_database(engine.url)
 
+# DB Metadata for ORM
+class Base(DeclarativeBase):
+    pass
 
+meta = MetaData()
+
+user_table = Table(
+    "users",
+    metadata_obj,
+    Column("id", Integer, primary_key=True),
+    Column("name", String(30)),
+    Column("fullname", String),
+)
 
 @app.route("/")
 def index():

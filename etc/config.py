@@ -12,7 +12,7 @@
 db_config = {
     "db_type": "mysql+mysqlconnector",
     "db_username": "root",
-    "db_pass": "",
+    "db_pass": "root",
     "db_host": "localhost",
     "db_file": "project-tc"
 }
