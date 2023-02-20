@@ -1,10 +1,9 @@
-from sqlalchemy import URL, create_engine, text, MetaData, Table, Column, Integer, String
-from sqlalchemy_utils import database_exists, create_database
-from etc.config import db_config
+from sqlalchemy import text, select
 from flask import Flask, redirect, render_template, request
 from flask_session import Session
 from functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
+from db_init import db_init
 
 # Configure application
 app = Flask(__name__)
@@ -18,40 +17,9 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+# Initialise database and tables
+engine, users_table = db_init()
 
-# Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
-
-# Configure DB connection
-# Import db config from etc/config
-db_type = ""
-db_file = db_username = db_pass = db_host = None
-# Assign variables from db_config
-for item in db_config:
-    exec('{KEY} = {VALUE}'.format(KEY=item, VALUE=repr(db_config[item])))
-# Create db URL & engine
-db_url = URL.create(db_type, database=db_file, username=db_username,
-                    password=db_pass, host=db_host)
-engine = create_engine(db_url)
-# Initialise database
-if not database_exists(engine.url):
-    create_database(engine.url)
-
-# DB Metadata for ORM
-# Create metadata object
-meta = MetaData()
-# Define tables
-user_table = Table(
-    "users",
-    meta,
-    Column("id", Integer, primary_key=True),
-    Column("username", String(30)),
-    Column("hash", String(60)),
-)
-# Create tables
-meta.create_all(engine, checkfirst=True))
 
 @app.route("/")
 def index():
@@ -74,9 +42,11 @@ def register():
 
         # Check if username already exists
         with engine.begin() as db:
-            result = db.execute(
-                text('SELECT id FROM users WHERE username = :u'), {'u': username})
-            print(result.rowcount)
+            result = select(users_table).where(
+                users_table.c.username == username)
+            # result = db.execute(
+            #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
+            print(result)
             if result.rowcount > 0:
                 # return apology("Username already exists")
                 return apology("Username already exists")
