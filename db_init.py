@@ -1,7 +1,6 @@
 from sqlalchemy import URL, create_engine, MetaData, Table, Column, Integer, String
 from sqlalchemy_utils import database_exists, create_database
 from etc.config import db_config
-import _mysql_connector 
 
 
 def db_init():
@@ -10,11 +9,13 @@ def db_init():
     db_type = ""
     db_file = db_username = db_pass = db_host = None
 # Assign variables from db_config
+    print(db_config)
     for item in db_config:
         exec('{KEY} = {VALUE}'.format(KEY=item, VALUE=repr(db_config[item])))
 # Create db URL & engine
     db_url = URL.create(db_type, database=db_file, username=db_username,
                         password=db_pass, host=db_host)
+    print(db_url)
     engine = create_engine(db_url)
 # Initialise database
     if not database_exists(engine.url):
