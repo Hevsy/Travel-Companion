@@ -10,7 +10,7 @@
 
 
 db_config = {
-    "db_type": "mysql+mysqlconnector",
+    "db_type": "mysql+mysqldb",
     "db_username": "root",
     "db_pass": "root",
     "db_host": "localhost",

@@ -11,29 +11,33 @@ app = Flask(__name__)
 
 # Configure DB connection
 # Import db config from etc/config
-db_type = ""
-db_file = db_username = db_pass = db_host = None
+def init():
+    db_type = ""
+    db_file = db_username = db_pass = db_host = None
 # Assign variables from db_config
-for item in db_config:
-    exec('{KEY} = {VALUE}'.format(KEY=item, VALUE=repr(db_config[item])))
+    for item in db_config:
+        exec('{KEY} = {VALUE}'.format(KEY=item, VALUE=repr(db_config[item])))
 # Create db URL & engine
-db_url = URL.create(db_type, database=db_file, username=db_username,
+    db_url = URL.create(db_type, database=db_file, username=db_username,
                     password=db_pass, host=db_host)
-engine = create_engine(db_url)
+    print(db_url)
+    engine = create_engine(db_url)
 # Initialise database
-if not database_exists(engine.url):
-    create_database(engine.url)
+    if not database_exists(engine.url):
+        create_database(engine.url)
 
 # DB Metadata for ORM
 # Create metadata object
-meta = MetaData()
+    meta = MetaData()
 # Define tables
-users_table = Table(
+    users_table = Table(
     "users",
     meta,
     Column("id", Integer, primary_key=True),
     Column("username", String(30)),
     Column("hash", String(60)),
 )
+
+init()
 
 
