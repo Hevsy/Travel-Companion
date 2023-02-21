@@ -4,17 +4,9 @@ from etc.config import db_config
 
 
 def db_init():
-    # Configure DB connection
-    # Import db config from etc/config
-    db_type = ""
-    db_file = db_username = db_pass = db_host = None
-# Assign variables from db_config
-    print(db_config)
-    for item in db_config:
-        exec('{KEY} = {VALUE}'.format(KEY=item, VALUE=repr(db_config[item])))
-# Create db URL & engine
-    db_url = URL.create(db_type, database=db_file, username=db_username,
-                        password=db_pass, host=db_host)
+    # Create db URL & engine
+    db_url = URL.create(db_config['type'], database=db_config['db'],
+                        username=db_config['username'], password=db_config['pass'], host=db_config['host'])
     print(db_url)
     engine = create_engine(db_url)
 # Initialise database

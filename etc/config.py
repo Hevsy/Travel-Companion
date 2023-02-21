@@ -10,17 +10,17 @@
 
 
 db_config = {
-    "db_type": "mysql+mysqldb",
-    "db_username": "root",
-    "db_pass": "root",
-    "db_host": "localhost",
-    "db_file": "project-tc"
+    "type": "mysql+mysqldb",
+    "username": "root",
+    "pass": "root",
+    "host": "localhost",
+    "db": "project-tc"
 }
 
 db_config_test = {
-    "db_type": "sqlite",
-    "db_username": None,
-    "db_pass": None,
-    "db_host": None,
-    "db_file": "finance.db"
+    "type": "sqlite",
+    "username": None,
+    "pass": None,
+    "host": None,
+    "db": "finance.db"
 }
