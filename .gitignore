@@ -1,5 +1,6 @@
 __pycache__/
 etc/__pycache__/
 flask_session/
+flask_session
 .a.py.swp
 venv/

@@ -1,7 +1,7 @@
 from sqlalchemy import URL, create_engine, MetaData, Table, Column, Integer, String
 from sqlalchemy_utils import database_exists, create_database
 from etc.config import db_config
-import _mysql_connector   
+import _mysql_connector 
 
 
 def db_init():

@@ -17,6 +17,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 # Initialise database and tables
 engine, users_table = db_init()
 
