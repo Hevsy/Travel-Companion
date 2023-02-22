@@ -2,12 +2,12 @@ import app
 import unittest
 
 
-class TestHome(unittest.TestCase):
+class TestRegister(unittest.TestCase):
 
     def setUp(self):
         app.app.testing = True
         self.app = app.app.test_client()
 
-    def test_home(self):
-        result = self.app.get('/')
+    def test_register(self):
+        result = self.app.get('/register')
         # Make your assertions
