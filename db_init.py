@@ -22,7 +22,7 @@ def db_init():
         meta,
         Column("id", Integer, primary_key=True),
         Column("username", String(30)),
-        Column("hash", String(60)),
+        Column("hash", String(255)),
     )
 # Create tables
     meta.create_all(engine, checkfirst=True)
