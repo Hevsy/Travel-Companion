@@ -80,7 +80,7 @@ def login():
 
         # Query database for username
         with engine.begin() as db:
-            rows = db.execute(select(users_table.c["id","hash"]).where(users_table.c.username=username).all()
+            rows = db.execute(select(users_table.c["id","hash"]).where(users_table.c.username=username)).all()
             #rows = db.execute(text("SELECT id, hash FROM users WHERE username = :u"), {
             #                 "u": request.form.get("username")}).all()
             # Ensure username exists and password is correct
