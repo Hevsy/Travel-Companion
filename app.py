@@ -43,12 +43,11 @@ def register():
 
         # Check if username already exists
         with engine.begin() as db:
-            result = select(users_table).where(
-                users_table.c.username == username)
+            result = db.execute(select(users_table.c.id).where(users_table.c.username == 'user')).all()
             # result = db.execute(
             #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
             print(result)
-            if result.rowcount > 0:
+            if len(result) > 0:
                 # return apology("Username already exists")
                 return apology("Username already exists")
             else:
