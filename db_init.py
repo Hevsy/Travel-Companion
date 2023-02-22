@@ -4,7 +4,7 @@ from etc.config import db_config
 
 
 def db_init():
-    # Create db URL & engine
+    """Create db URL & engine"""
     db_url = URL.create(db_config['type'], database=db_config['db'],
                         username=db_config['username'], password=db_config['pass'], host=db_config['host'])
     print(db_url)
@@ -12,6 +12,7 @@ def db_init():
 # Initialise database
     if not database_exists(engine.url):
         create_database(engine.url)
+
 
 # DB Metadata for ORM
 # Create metadata object
