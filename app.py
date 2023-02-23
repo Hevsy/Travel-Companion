@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select, update
+from sqlalchemy import insert, select, update, func
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 from functions import login_required, apology
@@ -65,8 +65,6 @@ def register():
                 db.execute(insert(users_table).values(
                     username=username, hash=hash))
                 db.commit()
-                # db.execute(text(
-                #    "INSERT INTO users (username, hash) VALUES (:u, :h)"), {"u": username, "h": hash})
                 return redirect("/login")
 
 
@@ -92,12 +90,11 @@ def login():
         with engine.begin() as db:
             password = str(request.form.get("password"))
             username = str(request.form.get("username"))
-            rows = db.execute(select(users_table.c["id", "hash"]).where(
-                users_table.c.username == username)).all()
-            # rows = db.execute(text("SELECT id, hash FROM users WHERE username = :u"), {
-            #                 "u": request.form.get("username")}).all()
+            c = db.execute(select(func.count()).select_from(users_table).where(users_table.c.username == username)).scalar()
+            # rows = db.execute(select(users_table.c["id", "hash"]).where(
+            #    users_table.c.username == username)).all()
             # Ensure username exists and password is correct
-            if len(rows) != 1 or not check_password_hash(rows[0][1], password):
+            if c != 1 or not check_password_hash(rows[0][1], password):
                 return apology("invalid username and/or password", 403)
 
             # Remember which user has logged in
@@ -130,9 +127,7 @@ def pwdchange():
     else:
         with engine.begin() as db:
             hash = db.execute(select(users_table.c.hash).where(
-                users_table.c.id == session["user_id"])).all()[0][0]
-            # hash = db.execute(text("SELECT hash FROM users WHERE id = :id"),
-            #                  {"id": session["user_id"]}).all()[0][0]
+                users_table.c.id == session["user_id"])).scalar()
             old_password = request.form.get("old_password")
             new_password = request.form.get("new_password")
             confirmation = request.form.get("confirmation")
@@ -143,7 +138,6 @@ def pwdchange():
             elif new_password != confirmation:
                 return apology("Passwords do not match!", 403)
             new_hash = generate_password_hash(new_password)
-            db.execute(update(users_table).where(users_table.c.id == session["user_id"]).values(hash = new_hash))
-            # db.execute(text(
-            #    "UPDATE users SET hash = :h WHERE id = :id"), {"h": new_hash, "id": session["user_id"]})
+            db.execute(update(users_table).where(users_table.c.id == session["user_id"]).values(hash=new_hash))
+            db.commit()
             return redirect("/")
