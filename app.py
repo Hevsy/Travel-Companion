@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, update
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 from functions import login_required, apology
@@ -7,6 +7,14 @@ from db_init import db_init
 
 # Configure application
 app = Flask(__name__)
+
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 
 @app.after_request
@@ -23,7 +31,9 @@ engine, users_table = db_init()
 
 
 @app.route("/")
+@login_required
 def index():
+    """Homepage"""
     return render_template("index.html")
 
 
@@ -80,15 +90,18 @@ def login():
 
         # Query database for username
         with engine.begin() as db:
-            rows = db.execute(select(users_table.c["id","hash"]).where(users_table.c.username==username)).all()
-            #rows = db.execute(text("SELECT id, hash FROM users WHERE username = :u"), {
+            password = str(request.form.get("password"))
+            username = str(request.form.get("username"))
+            rows = db.execute(select(users_table.c["id", "hash"]).where(
+                users_table.c.username == username)).all()
+            # rows = db.execute(text("SELECT id, hash FROM users WHERE username = :u"), {
             #                 "u": request.form.get("username")}).all()
             # Ensure username exists and password is correct
-            if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            if len(rows) != 1 or not check_password_hash(rows[0][1], password):
                 return apology("invalid username and/or password", 403)
 
             # Remember which user has logged in
-            session["user_id"] = rows[0]["id"]
+            session["user_id"] = rows[0][0]
 
             # Redirect user to home page
             return redirect("/")
@@ -96,3 +109,41 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
+
+
+@ app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
+
+@ app.route("/pwdchange", methods=["GET", "POST"])
+def pwdchange():
+    """Change user's password"""
+    if request.method == "GET":
+        return render_template("pwdchange.html")
+    else:
+        with engine.begin() as db:
+            hash = db.execute(select(users_table.c.hash).where(
+                users_table.c.id == session["user_id"])).all()[0][0]
+            # hash = db.execute(text("SELECT hash FROM users WHERE id = :id"),
+            #                  {"id": session["user_id"]}).all()[0][0]
+            old_password = request.form.get("old_password")
+            new_password = request.form.get("new_password")
+            confirmation = request.form.get("confirmation")
+            if not old_password or not new_password or not confirmation:
+                return apology("Must provide old and new passwords", 403)
+            elif not check_password_hash(hash, old_password):
+                return apology("Invalid password", 403)
+            elif new_password != confirmation:
+                return apology("Passwords do not match!", 403)
+            new_hash = generate_password_hash(new_password)
+            db.execute(update(users_table).where(users_table.c.id == session["user_id"]).values(hash = new_hash))
+            # db.execute(text(
+            #    "UPDATE users SET hash = :h WHERE id = :id"), {"h": new_hash, "id": session["user_id"]})
+            return redirect("/")

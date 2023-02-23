@@ -7,7 +7,6 @@ def db_init():
     """Create db URL & engine"""
     db_url = URL.create(db_config['type'], database=db_config['db'],
                         username=db_config['username'], password=db_config['pass'], host=db_config['host'])
-    print(db_url)
     engine = create_engine(db_url)
 # Initialise database
     if not database_exists(engine.url):

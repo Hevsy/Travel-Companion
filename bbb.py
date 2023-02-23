@@ -39,10 +39,9 @@ def db_init():
 engine, users_table = db_init()
 
 with engine.begin() as db:
-    result = db.execute(select(users_table.c.id).where(
-        users_table.c.username == 'user')).all()
+    rows = db.execute(select(users_table.c.hash).where(users_table.c.id=="1")).all()
     # result = db.execute(
     #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
-    print(result)
-    print(len(result))
+    print(rows[0][0])
+    # print(len(rows))
     # print(len(result))
