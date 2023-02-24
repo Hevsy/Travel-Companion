@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select, update, func
+from sqlalchemy import insert, select, update
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 from functions import login_required, apology
@@ -90,11 +90,10 @@ def login():
         with engine.begin() as db:
             password = str(request.form.get("password"))
             username = str(request.form.get("username"))
-            c = db.execute(select(func.count()).select_from(users_table).where(users_table.c.username == username)).scalar()
-            # rows = db.execute(select(users_table.c["id", "hash"]).where(
-            #    users_table.c.username == username)).all()
+            rows = db.execute(select(users_table.c["id", "hash"]).where(
+                users_table.c.username == username)).all()
             # Ensure username exists and password is correct
-            if c != 1 or not check_password_hash(rows[0][1], password):
+            if len(rows) != 1 or not check_password_hash(rows[0][1], password):
                 return apology("invalid username and/or password", 403)
 
             # Remember which user has logged in
