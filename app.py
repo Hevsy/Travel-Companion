@@ -53,19 +53,26 @@ def register():
 
         # Check if username already exists
         with engine.begin() as db:
-            result = db.execute(
-                select(users_table.c.id).where(users_table.c.username == "user")
-            ).all()
-            # result = db.execute(
-            #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
-            if len(result) > 0:
-                # return apology("Username already exists")
+            if check_if_username_exists(db):
                 return apology("Username already exists")
             else:
-                hash = generate_password_hash(password)
-                db.execute(insert(users_table).values(username=username, hash=hash))
-                db.commit()
+                register_user(username, password, db)
                 return redirect("/login")
+
+
+def register_user(username, password, db):
+    """Add user to DB"""
+    hash = generate_password_hash(password)
+    db.execute(insert(users_table).values(username=username, hash=hash))
+    db.commit()
+
+
+def check_if_username_exists(db):
+    """Check is username already exists in DB"""
+    result = db.execute(
+        select(users_table.c.id).where(users_table.c.username == "user")
+    ).all()
+    return len(result) > 0
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -136,7 +143,7 @@ def pwdchange():
             confirmation = request.form.get("confirmation")
             if not old_password or not new_password or not confirmation:
                 return apology("Must provide old and new passwords", 403)
-            elif not check_password_hash(hash, old_password):
+            elif not check_password_hash(hash, old_password):  # type: ignore
                 return apology("Invalid password", 403)
             elif new_password != confirmation:
                 return apology("Passwords do not match!", 403)

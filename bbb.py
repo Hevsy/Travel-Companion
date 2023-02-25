@@ -41,5 +41,5 @@ engine, users_table = db_init()
 with engine.begin() as db:
     hash = db.execute(select(users_table.c.hash).where(users_table.c.id == "1")).scalar()
 
-    print(check_password_hash(hash, "test1"))
+    print(check_password_hash(hash, "test1")) # type: ignore
  
