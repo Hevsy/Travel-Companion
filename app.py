@@ -37,7 +37,7 @@ def index():
     return render_template("index.html")
 
 
-@ app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
     if request.method == "GET":
@@ -53,8 +53,9 @@ def register():
 
         # Check if username already exists
         with engine.begin() as db:
-            result = db.execute(select(users_table.c.id).where(
-                users_table.c.username == 'user')).all()
+            result = db.execute(
+                select(users_table.c.id).where(users_table.c.username == "user")
+            ).all()
             # result = db.execute(
             #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
             if len(result) > 0:
@@ -62,13 +63,12 @@ def register():
                 return apology("Username already exists")
             else:
                 hash = generate_password_hash(password)
-                db.execute(insert(users_table).values(
-                    username=username, hash=hash))
+                db.execute(insert(users_table).values(username=username, hash=hash))
                 db.commit()
                 return redirect("/login")
 
 
-@ app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
 
@@ -90,8 +90,11 @@ def login():
         with engine.begin() as db:
             password = str(request.form.get("password"))
             username = str(request.form.get("username"))
-            rows = db.execute(select(users_table.c["id", "hash"]).where(
-                users_table.c.username == username)).all()
+            rows = db.execute(
+                select(users_table.c["id", "hash"]).where(
+                    users_table.c.username == username
+                )
+            ).all()
             # Ensure username exists and password is correct
             if len(rows) != 1 or not check_password_hash(rows[0][1], password):
                 return apology("invalid username and/or password", 403)
@@ -107,7 +110,7 @@ def login():
         return render_template("login.html")
 
 
-@ app.route("/logout")
+@app.route("/logout")
 def logout():
     """Log user out"""
 
@@ -118,15 +121,16 @@ def logout():
     return redirect("/")
 
 
-@ app.route("/pwdchange", methods=["GET", "POST"])
+@app.route("/pwdchange", methods=["GET", "POST"])
 def pwdchange():
     """Change user's password"""
     if request.method == "GET":
         return render_template("pwdchange.html")
     else:
         with engine.begin() as db:
-            hash = db.execute(select(users_table.c.hash).where(
-                users_table.c.id == session["user_id"])).scalar()
+            hash = db.execute(
+                select(users_table.c.hash).where(users_table.c.id == session["user_id"])
+            ).scalar()
             old_password = request.form.get("old_password")
             new_password = request.form.get("new_password")
             confirmation = request.form.get("confirmation")
@@ -137,6 +141,10 @@ def pwdchange():
             elif new_password != confirmation:
                 return apology("Passwords do not match!", 403)
             new_hash = generate_password_hash(new_password)
-            db.execute(update(users_table).where(users_table.c.id == session["user_id"]).values(hash=new_hash))
+            db.execute(
+                update(users_table)
+                .where(users_table.c.id == session["user_id"])
+                .values(hash=new_hash)
+            )
             db.commit()
             return redirect("/")
