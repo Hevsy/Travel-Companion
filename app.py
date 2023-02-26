@@ -155,3 +155,10 @@ def pwdchange():
             )
             db.commit()
             return redirect("/")
+
+
+@app.route("/blank")
+def blank():
+    """Blank page"""
+    return render_template("blank.html")
+
