@@ -68,11 +68,14 @@
             <hr class="sidebar-divider">
 
             <!-- Nav Item - User Information -->
-            <div class="dropdown">
-                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://github.com/mdo.png" alt="" width="32"
-                        height="32" class="rounded-circle me-2">
+            <div class="dropdown text-center d-none d-md-inline">
+                <a href="#" class="sidebar-brand-icon dropdown">
+                    
+                    
+                </a>
+                <a href="#" class="d-flex link-dark dropdown-toggle"
+                    data-bs-toggle="dropdown">
+                    <i class="fa-solid fa-suitcase-rolling dropdown" data-bs-toggle="dropdown"></i>
                     <strong>User</strong>
                 </a>
                 <ul class="dropdown-menu text-small shadow">
@@ -93,28 +96,30 @@
             <!-- Main Content -->
             <div id="content">
                 <!-- Topbar -->
-                <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                            aria-label="Search" aria-describedby="basic-addon2" />
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button" disabled>
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Topbar Search -->
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2" />
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" disabled>
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
 
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
 
-                    </a>
+                        </a>
 
-                    <div class="topbar-divider d-none d-sm-block"></div>
+                        <div class="topbar-divider d-none d-sm-block"></div>
 
 
-                </ul>
+                    </ul>
                 </nav>
                 <!-- End of Topbar -->
 
