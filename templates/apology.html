@@ -5,26 +5,30 @@ Apology
 {% endblock %}
 
 {% block main %}
-<div class="container">
-    <div class="card o-hidden border-0 shadow-lg my-5">
-        <div class="card-body p-0">
-            <div class="row">
-                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-                <div class="col-lg-7">
-                    <div class="p-5">
-                        <div class="text-center">
-                            <h1 class="h4 text-gray-900 mb-4">Error</h1>
-                        </div>
-                        <div>
-                            {{ code }}
-                            {{ message }}
+<body class="bg-gradient-secondary">
+    <div class="container">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-error-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900">Error</h1>
+                            </div>
+                            <div>
+                                <div class="text-center">
+                                    <div class="error mx-auto" mb-5>{{ code }}</div>
+                                    <p class="lead text-gray-800 mb-5">{{ message }}</p>
+                                    <a href="/">&larr; Back to main page</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 </body>
 {% endblock %}
