@@ -1,0 +1,37 @@
+{% extends "layout-2.html" %}
+
+{% block title %}
+Welcome!
+{% endblock %}
+
+{% block main %}
+
+<body class="bg-intro-image">
+    <div class="container">
+        <nav class="bg-light border navbar navbar-expand-md navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><span class="blue">
+                        <i class="fa-solid fa-suitcase-rolling"></i>
+                        Travel Companion
+                    </span></a>
+                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"
+                    class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="text-center">
+            <hr>
+            <hr>
+            <h1 class="h4 text-gray-900">Welcome!</h1>
+            <h2 class="h3">Please login or register</h2>
+        </div>
+    </div>
+</body>
+{% endblock %}

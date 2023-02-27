@@ -31,10 +31,12 @@ engine, users_table = db_init()
 
 
 @app.route("/")
-@login_required
 def index():
     """Homepage"""
-    return render_template("index.html")
+    if session.get("user_id") is None:
+        return render_template("main.html")
+    else:
+        return render_template("index.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
