@@ -164,3 +164,9 @@ def blank():
     """Blank page"""
     return render_template("blank.html")
 
+@login_required
+@app.route("/dest")
+def destinations():
+    """Destinations page"""
+    return render_template("dest.html")
+
