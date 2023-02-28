@@ -10890,7 +10890,7 @@ a.text-dark:focus {
     }
 
     abbr[title]::after {
-        content: " ("attr(title) ")";
+        content: " (" attr(title) ")";
     }
 
     pre {
@@ -12250,3 +12250,13 @@ body.sidebar-toggled footer.sticky-footer {
     width: 100%;
 }
 
+.settings-brand {
+    color: white;
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    font-size: 0.9rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
