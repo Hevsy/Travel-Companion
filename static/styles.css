@@ -12260,3 +12260,9 @@ body.sidebar-toggled footer.sticky-footer {
     line-height: inherit;
     white-space: nowrap;
 }
+
+.font-border {
+    color: var(--blue);
+    -webkit-text-stroke-width: 1.1px;
+    -webkit-text-stroke-color: black;
+}
