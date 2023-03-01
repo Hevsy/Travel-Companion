@@ -166,7 +166,7 @@ def blank():
 
 @login_required
 @app.route("/dest")
-def destinations():
+def dest():
     """Destinations page"""
     return render_template("dest.html")
 
