@@ -1,5 +1,8 @@
-from sqlalchemy import URL, create_engine, MetaData, Table, Column, Integer, String
+from tkinter import BooleanVar
+from xmlrpc.client import Boolean
+from sqlalchemy import URL, create_engine, MetaData, Table, Column, Integer, String, table
 from sqlalchemy_utils import database_exists, create_database
+from app import destinations
 from etc.config import db_config
 
 
@@ -24,6 +27,15 @@ def db_init():
         Column("username", String(30)),
         Column("hash", String(255)),
     )
+    destinations_table = Table(
+        "destinations",
+        meta,
+        Column("id", Integer, primary_key=True),
+        Column("name", String(60)),
+        Column("country", String(60)),
+        Column("year", Integer)
+        Column("completed", Boolean),
+    )
 # Create tables
     meta.create_all(engine, checkfirst=True)
-    return engine, users_table
+    return engine, users_table, destinations_table
