@@ -1,8 +1,5 @@
-from tkinter import BooleanVar
-from xmlrpc.client import Boolean
-from sqlalchemy import URL, create_engine, MetaData, Table, Column, Integer, String, table
+from sqlalchemy import URL, ForeignKey, create_engine, MetaData, Table, Column, Integer, String, Boolean
 from sqlalchemy_utils import database_exists, create_database
-from app import destinations
 from etc.config import db_config
 
 
@@ -31,9 +28,10 @@ def db_init():
         "destinations",
         meta,
         Column("id", Integer, primary_key=True),
+        Column("user_id", Integer, ForeignKey("users.id")),
         Column("name", String(60)),
         Column("country", String(60)),
-        Column("year", Integer)
+        Column("year", Integer),
         Column("completed", Boolean),
     )
 # Create tables

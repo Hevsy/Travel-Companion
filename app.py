@@ -27,7 +27,7 @@ def after_request(response):
 
 
 # Initialise database and tables
-engine, users_table = db_init()
+engine, users_table, destinations_table = db_init()
 
 
 @app.route("/")
