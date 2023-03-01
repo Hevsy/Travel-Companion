@@ -51,7 +51,7 @@
                     <span>Destinations</span></a>
             </li>
             <!-- Divider -->
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider my-0">
             <!-- Nav Item - Schedule -->
             <li class="nav-item">
                 <a class="nav-link" href="/schedule">
@@ -59,7 +59,7 @@
                     <span>Schedule</span></a>
             </li>
             <!-- Divider -->
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider my-0">
             <!-- Nav Item - Ideas -->
             <li class="nav-item">
                 <a class="nav-link" href="/ideas">
@@ -67,7 +67,7 @@
                     <span>Ideas</span></a>
             </li>
             <!-- Divider -->
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider my-0">
             <!-- Nav Item - Ideas -->
             <li class="nav-item">
                 <a class="nav-link" href="/categories">
@@ -75,7 +75,7 @@
                     <span>Categories</span></a>
             </li>
             <!-- Divider -->
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider my-0">
             <!-- Nav Item - User Information -->
             <div class="dropdown dropend text-center d-none d-md-inline d-flex mt-auto">
                 <a href="#" class="d-flex align-items-center justify-content-center"
@@ -116,10 +116,9 @@
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+                    <!-- Topbar - Page name -->
+                    <a class="nav-link">
+                        <span>{% block title2 %}{% endblock %}</span></a>
                     <div class="topbar-divider d-none d-sm-block"></div>
                     <div class="mx-3"></div>
                     <!-- Topbar Search -->
@@ -149,8 +148,8 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">{% block main %}{% endblock %}</div>
                 <!-- /.container-fluid -->
+                <div class="container-fluid">{% block main %}{% endblock %}</div>
             </div>
             <!-- End of Main Content -->
         </div>
