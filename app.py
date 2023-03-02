@@ -4,6 +4,7 @@ from flask_session import Session
 from functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
 from db_init import db_init
+from sys import stdout
 
 # Configure application
 app = Flask(__name__)
@@ -14,7 +15,6 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["FLASK_DEBUG"] = "FLASK_DEBUG=1"
 Session(app)
 
 
@@ -57,15 +57,21 @@ def register():
         # Check if username already exists
         with engine.begin() as db:
             result = db.execute(
-                select(users_table.c.id).where(users_table.c.username == username)).all()
-            print(result)
+                select(users_table.c.id).where(users_table.c.username == username)
+            ).all()
+            print(result, stdout.flush())
             # result = db.execute(
             #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
             if len(result) > 0:
                 return apology("Username already exists")
             else:
                 hash = generate_password_hash(password)
+                print(hash, stdout.flush())
                 db.execute(insert(users_table).values(username=username, hash=hash))
+                print(
+                    insert(users_table).values(username=username, hash=hash),
+                    stdout.flush(),
+                )
                 db.commit()
                 return redirect("/login")
 
@@ -172,9 +178,13 @@ def blank():
     """Blank page"""
     return render_template("blank.html")
 
+
 @login_required
 @app.route("/dest")
 def dest():
     """Destinations page"""
     return render_template("dest.html")
 
+
+if __name__ == "__main__":
+    app.run(debug=True, use_debugger=False)
