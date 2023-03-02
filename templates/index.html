@@ -1,36 +1,37 @@
-{% extends "layout.html" %}
+{% extends "layout-index.html" %}
 
 {% block title %}
-Destinations
-{% endblock %}
-
-{% block title2 %}
-Destinations
+Welcome!
 {% endblock %}
 
 {% block main %}
-<div>
-    <h1 class="h3 mb-1 text-gray-800">Your travel destinations</h1>
-    <p class="mb-4">Whether you already booked a trip or just dreaming about going somewhere, dot your thoughts and
-        ideas here. Create and review your destinations here.</p>
-</div>
-<div class="row">
-    <!-- Earnings (Annual) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Earnings (Annual)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
+
+<body class="bg-intro-image">
+    <div class="container">
+        <nav class="bg-light border navbar navbar-expand-md navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><span class="blue">
+                        <i class="fa-solid fa-suitcase-rolling"></i>
+                        Travel Companion
+                    </span></a>
+                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"
+                    class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                    </ul>
                 </div>
             </div>
+        </nav>
+        <div class="text-center">
+            <hr>
+            <hr>
+            <h1 class="font-border h3">Welcome!</h1>
+            <h2 class="font-border h4">Please login or register</h2>
         </div>
     </div>
-</div>
+</body>
 {% endblock %}

@@ -28,7 +28,7 @@ def db_init():
         "destinations",
         meta,
         Column("id", Integer, primary_key=True),
-        Column("user_id", Integer, ForeignKey("users.id")),
+        Column("user_id", Integer, ForeignKey("users.id"), nullable=False),
         Column("name", String(60)),
         Column("country", String(60)),
         Column("year", Integer),

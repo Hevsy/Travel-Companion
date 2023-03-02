@@ -1,4 +1,4 @@
-from sqlalchemy import URL, create_engine, text, MetaData, Table, Column, Integer, String, select
+from sqlalchemy import URL, create_engine, insert, text, MetaData, Table, Column, Integer, String, select
 from sqlalchemy_utils import database_exists, create_database
 from etc.config import db_config
 from flask import Flask, redirect, render_template, request
@@ -39,7 +39,20 @@ def db_init():
 engine, users_table = db_init()
 
 with engine.begin() as db:
-    hash = db.execute(select(users_table.c.hash).where(users_table.c.id == "1")).scalar()
+    password = "123"
+    username = "Paul"
+    result = db.execute(
+        select(users_table.c.id).where(users_table.c.username == username)).all()
+    # result = db.execute(
+    #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
 
-    print(check_password_hash(hash, "test1")) # type: ignore
- 
+    print(result)
+    print(len(result))
+    if len(result) > 0:
+        print("Username already exists")
+    else:
+        hash = generate_password_hash(password)
+        db.execute(insert(users_table).values(username=username, hash=hash))
+        print("insert")
+        db.commit()
+        print("commit")

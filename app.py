@@ -14,6 +14,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["FLASK_DEBUG"] = "FLASK_DEBUG=1"
 Session(app)
 
 
@@ -34,9 +35,9 @@ engine, users_table, destinations_table = db_init()
 def index():
     """Homepage"""
     if session.get("user_id") is None:
-        return render_template("main.html")
-    else:
         return render_template("index.html")
+    else:
+        return redirect("/dest")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -52,13 +53,20 @@ def register():
             return apology("Must provide username and password!")
         elif password != confirmation:
             return apology("Passwords do not match!")
-
+        print(username, password, confirmation)
         # Check if username already exists
         with engine.begin() as db:
-            if check_if_username_exists(db):
+            result = db.execute(
+                select(users_table.c.id).where(users_table.c.username == username)).all()
+            print(result)
+            # result = db.execute(
+            #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
+            if len(result) > 0:
                 return apology("Username already exists")
             else:
-                register_user(username, password, db)
+                hash = generate_password_hash(password)
+                db.execute(insert(users_table).values(username=username, hash=hash))
+                db.commit()
                 return redirect("/login")
 
 
@@ -69,10 +77,10 @@ def register_user(username, password, db):
     db.commit()
 
 
-def check_if_username_exists(db):
+def check_if_username_exists(db, username):
     """Check is username already exists in DB"""
     result = db.execute(
-        select(users_table.c.id).where(users_table.c.username == "user")
+        select(users_table.c.id).where(users_table.c.username == username)
     ).all()
     return len(result) > 0
 
