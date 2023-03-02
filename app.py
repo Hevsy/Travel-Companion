@@ -170,7 +170,8 @@ def dest():
     """Destinations page"""
     if request.method == "GET":
     # If reached via GET - read destinantions of the current user from DB and pass it on to the template to print
-
+        with engine.begin() as db:
+            dests = db.execute(select(destinations_table).where())
         return render_template("dest.html")
     else:
         # If reached via POST - I will need to add/edit/delete destination
