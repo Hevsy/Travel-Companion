@@ -56,23 +56,10 @@ def register():
         print(username, password, confirmation)
         # Check if username already exists
         with engine.begin() as db:
-            result = db.execute(
-                select(users_table.c.id).where(users_table.c.username == username)
-            ).all()
-            print(result, stdout.flush())
-            # result = db.execute(
-            #    text('SELECT id FROM users WHERE username = :u'), {'u': username})
-            if len(result) > 0:
+            if check_if_username_exists(db, username):
                 return apology("Username already exists")
             else:
-                hash = generate_password_hash(password)
-                print(hash, stdout.flush())
-                db.execute(insert(users_table).values(username=username, hash=hash))
-                print(
-                    insert(users_table).values(username=username, hash=hash),
-                    stdout.flush(),
-                )
-                db.commit()
+                register_user(username, password, db)
                 return redirect("/login")
 
 
