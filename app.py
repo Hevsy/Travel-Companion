@@ -4,13 +4,17 @@ from flask_session import Session
 from functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
 from db_init import db_init
-from sys import stdout
+# from sys import stdout, stderr # - used for print() when debugging
 
 # Configure application
 app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Debug and test mode enabled - REMOVE WHEN DEPLOYED!
+app.debug = True
+app.testing = True
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -160,18 +164,18 @@ def pwdchange():
             return redirect("/")
 
 
-@app.route("/blank")
-def blank():
-    """Blank page"""
-    return render_template("blank.html")
-
-
 @login_required
-@app.route("/dest")
+@app.route("/dest", methods=["GET", "POST"])
 def dest():
     """Destinations page"""
-    return render_template("dest.html")
+    if request.method == "GET":
+    # If reached via GET - read destinantions of the current user from DB and pass it on to the template to print
+
+        return render_template("dest.html")
+    else:
+        # If reached via POST - I will need to add/edit/delete destination
+        return render_template("dest.html")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, use_debugger=False)
+    app.run

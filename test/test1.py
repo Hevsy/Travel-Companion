@@ -26,3 +26,7 @@ class TestPages(unittest.TestCase):
     def test_pwdchange(self):
         """password change page test"""
         result = self.app.get("/pwdchange")
+
+    def test_dest(self):
+        """Destinations page test"""
+        result = self.app.get("/dest")
