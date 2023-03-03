@@ -17,20 +17,35 @@ Destinations
 <div class="row">
     <!-- Earnings (Annual) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
+        {% if not_empty %}
+        {% for row in destinations %}
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Earnings (Annual)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        <div class="h5 font-weight-bold text-success text-uppercase mb-1">
+                            {{ row['name'] }}</div>
+                        <div class="text-s mb-0 font-weight-bold text-gray-800">{{ row['country'] }}</div>
+                        <div class="text-s mb-0 font-weight-bold text-gray-800">{{ row['year'] }}</div>
+
                     </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
+        {% else %}
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="h5 font-weight-bold text-success text-uppercase mb-1">
+                            Nothing here yet!</div>
+                        <div class="text-s mb-0 font-weight-bold text-gray-800">Add your first destination</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

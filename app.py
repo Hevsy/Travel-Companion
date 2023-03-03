@@ -171,8 +171,8 @@ def dest():
     if request.method == "GET":
     # If reached via GET - read destinantions of the current user from DB and pass it on to the template to print
         with engine.begin() as db:
-            dests = db.execute(select(destinations_table).where())
-        return render_template("dest.html")
+            destinations = db.execute(select(destinations_table.c.name, destinations_table.c.country, destinations_table.c.year, destinations_table.c.completed).where(destinations_table.c.user_id == session["user_id"])).all()
+        return render_template("dest.html", not_empty = bool(len(destinations)), destinations=destinations)
     else:
         # If reached via POST - I will need to add/edit/delete destination
         return render_template("dest.html")
