@@ -1,5 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+# Cloudformation template for cloud resources on AWS for this project - whole package: VPC, subnets, security groups, IGW, route tables, EC2, ELB, ALB, RDS
+# Template does not deploy code to virtual machines just yet - TODO
 Parameters:
   KeyName:
     Description: Name of an existing EC2 key pair for SSH access to the EC2 instance.
@@ -205,7 +207,7 @@ Resources:
       FromPort: 5432
       ToPort: 5432
       SourceSecurityGroupId: !Ref EC2toRDSSG
-   
+
   FinalProjectWebServer:
     Type: AWS::EC2::Instance
     Properties:
@@ -241,12 +243,12 @@ Resources:
       DBName: FinalProject_db
       VPCSecurityGroups:
         - !Ref RDStoEC2SG
-      Engine: postgres
+      Engine: mysql
       DBSubnetGroupName: !Ref DBSubnetGroup1
       DBInstanceClass: db.t4g.micro
       DBInstanceIdentifier: db-FinalProject1
-      MasterUsername: postgres
-      MasterUserPassword: postgres
+      MasterUsername: root
+      MasterUserPassword: root
       Tags:
         - Key: Name
           Value: FinalProject_db
