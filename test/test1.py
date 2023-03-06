@@ -1,5 +1,6 @@
 import app
 import unittest
+from flask import session
 
 
 class TestPages(unittest.TestCase):
@@ -29,4 +30,6 @@ class TestPages(unittest.TestCase):
 
     def test_dest(self):
         """Destinations page test"""
+        with self.app.session_transaction() as session:
+            session['user_id'] = "1"
         result = self.app.get("/dest")
