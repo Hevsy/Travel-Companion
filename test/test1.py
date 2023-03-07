@@ -1,4 +1,4 @@
-import app
+import app.app as app
 import unittest
 from flask import session
 

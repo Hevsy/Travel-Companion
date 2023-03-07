@@ -1,6 +1,6 @@
 from sqlalchemy import URL, ForeignKey, create_engine, MetaData, Table, Column, Integer, String, Boolean
 from sqlalchemy_utils import database_exists, create_database
-from etc.config import db_config
+from .config import db_config
 
 
 def db_init():

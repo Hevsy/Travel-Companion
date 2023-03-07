@@ -1,9 +1,9 @@
 from sqlalchemy import insert, select, update
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
-from functions import login_required, apology
+from .etc.functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
-from db_init import db_init
+from .etc.db_init import db_init
 # from sys import stdout, stderr # - used for print() when debugging
 
 # Configure application

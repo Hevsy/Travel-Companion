@@ -3,7 +3,7 @@ from sqlalchemy_utils import database_exists, create_database
 from etc.config import db_config
 from flask import Flask, redirect, render_template, request
 from flask_session import Session
-from functions import login_required, apology
+from etc.functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure application
