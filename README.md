@@ -1,7 +1,8 @@
 # Travel Companion
-Final Project for CS50x Course
+**Final Project for CS50x Course**
 
-A web app for storing travel plans and activities
+*A web app for storing travel plans and activities*
+
 
 The first decision to be made - Flask or Django?
 Flask is already familiar from PSet9 and is rather straightforward.
