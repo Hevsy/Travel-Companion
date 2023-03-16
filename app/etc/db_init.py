@@ -1,22 +1,36 @@
-from sqlalchemy import URL, ForeignKey, create_engine, MetaData, Table, Column, Integer, String, Boolean
+from sqlalchemy import (
+    URL,
+    ForeignKey,
+    create_engine,
+    MetaData,
+    Table,
+    Column,
+    Integer,
+    String,
+    Boolean,
+)
 from sqlalchemy_utils import database_exists, create_database
 from .config import db_config
 
 
 def db_init():
     """Create db URL & engine"""
-    db_url = URL.create(db_config['type'], database=db_config['db'],
-                        username=db_config['username'], password=db_config['pass'], host=db_config['host'])
+    db_url = URL.create(
+        db_config["type"],
+        database=db_config["db"],
+        username=db_config["username"],
+        password=db_config["pass"],
+        host=db_config["host"],
+    )
     engine = create_engine(db_url)
-# Initialise database
+    # Initialise database
     if not database_exists(engine.url):
         create_database(engine.url)
 
-
-# DB Metadata for ORM
-# Create metadata object
+    # DB Metadata for ORM
+    # Create metadata object
     meta = MetaData()
-# Define tables
+    # Define tables
     users_table = Table(
         "users",
         meta,
@@ -34,6 +48,6 @@ def db_init():
         Column("year", Integer),
         Column("completed", Boolean),
     )
-# Create tables
+    # Create tables
     meta.create_all(engine, checkfirst=True)
     return engine, users_table, destinations_table
