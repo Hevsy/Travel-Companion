@@ -1,9 +1,10 @@
 from sqlalchemy import insert, select, update
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
-from .etc.functions import login_required, apology
+from etc.functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
-from .etc.db_init import db_init
+from etc.db_init import db_init
+
 # from sys import stdout, stderr # - used for print() when debugging
 
 # Configure application
@@ -91,7 +92,6 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-
         # Ensure username was submitted
         if not request.form.get("username"):
             return apology("must provide username", 403)
@@ -169,10 +169,19 @@ def pwdchange():
 def dest():
     """Destinations page"""
     if request.method == "GET":
-    # If reached via GET - read destinantions of the current user from DB and pass it on to the template to print
+        # If reached via GET - read destinantions of the current user from DB and pass it on to the template to print
         with engine.begin() as db:
-            destinations = db.execute(select(destinations_table.c.name, destinations_table.c.country, destinations_table.c.year, destinations_table.c.completed).where(destinations_table.c.user_id == session["user_id"])).all()
-        return render_template("dest.html", not_empty = bool(len(destinations)), destinations=destinations)
+            destinations = db.execute(
+                select(
+                    destinations_table.c.name,
+                    destinations_table.c.country,
+                    destinations_table.c.year,
+                    destinations_table.c.completed,
+                ).where(destinations_table.c.user_id == session["user_id"])
+            ).all()
+        return render_template(
+            "dest.html", not_empty=bool(len(destinations)), destinations=destinations
+        )
     else:
         # If reached via POST - I will need to add/edit/delete destination
         return render_template("dest.html")

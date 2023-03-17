@@ -2,7 +2,6 @@ import app.app as app
 import unittest
 from flask import session
 
-
 class TestPages(unittest.TestCase):
     def setUp(self):
         app.app.testing = True
@@ -33,3 +32,6 @@ class TestPages(unittest.TestCase):
         with self.app.session_transaction() as session:
             session['user_id'] = "1"
         result = self.app.get("/dest")
+
+if __name__ == "__main__":
+    unittest.main()
