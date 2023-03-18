@@ -4,6 +4,8 @@ from flask_session import Session
 from etc.functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
 from etc.db_init import db_init
+import sys # added!
+sys.path.append("..") # added!
 
 # from sys import stdout, stderr # - used for print() when debugging
 

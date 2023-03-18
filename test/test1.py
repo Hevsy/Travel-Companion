@@ -1,6 +1,9 @@
 import app.app as app
 import unittest
 from flask import session
+import sys
+sys.path.append("..")
+
 
 class TestPages(unittest.TestCase):
     def setUp(self):
@@ -8,6 +11,8 @@ class TestPages(unittest.TestCase):
         self.app = app.app.test_client()
 
     def test_home(self):
+
+
         """homepage test"""
         result = self.app.get("/")
 
