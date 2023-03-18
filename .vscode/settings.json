@@ -5,7 +5,9 @@
         "-s",
         "./test",
         "-p",
-        "test*.py"
+        "test*.py",
+        "-t",
+        "./app"
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
