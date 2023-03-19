@@ -2,7 +2,12 @@ import app.app as app
 import unittest
 from flask import session
 import sys
-sys.path.append("..")
+from os import getcwd
+import logging
+
+sys.path.append("./app/*")
+print(sys.path)
+print(getcwd)
 
 
 class TestPages(unittest.TestCase):
@@ -11,7 +16,6 @@ class TestPages(unittest.TestCase):
         self.app = app.app.test_client()
 
     def test_home(self):
-
 
         """homepage test"""
         result = self.app.get("/")
@@ -35,8 +39,9 @@ class TestPages(unittest.TestCase):
     def test_dest(self):
         """Destinations page test"""
         with self.app.session_transaction() as session:
-            session['user_id'] = "1"
+            session["user_id"] = "1"
         result = self.app.get("/dest")
+
 
 if __name__ == "__main__":
     unittest.main()

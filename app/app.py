@@ -1,11 +1,10 @@
 from sqlalchemy import insert, select, update
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
-from etc.functions import login_required, apology
+from .etc.functions import login_required, apology
 from werkzeug.security import check_password_hash, generate_password_hash
-from etc.db_init import db_init
-import sys # added!
-sys.path.append("..") # added!
+from .etc.db_init import db_init
+
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -140,7 +139,7 @@ def logout():
 @app.route("/pwdchange", methods=["GET", "POST"])
 def pwdchange():
     """Change user's password"""
-    if request.method == "GET":
+    if request.method == "GET": 
         return render_template("pwdchange.html")
     else:
         with engine.begin() as db:
