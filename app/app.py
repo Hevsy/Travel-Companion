@@ -36,10 +36,12 @@ def after_request(response):
 # Initialise database and tables
 engine, users_table, destinations_table = db_init()
 
+
 @app.errorhandler(404)
 def not_found(e):
     """404 handler"""
     return apology("Page not found", 404)
+
 
 @app.route("/")
 def index():
@@ -143,7 +145,7 @@ def logout():
 @app.route("/pwdchange", methods=["GET", "POST"])
 def pwdchange():
     """Change user's password"""
-    if request.method == "GET": 
+    if request.method == "GET":
         return render_template("pwdchange.html")
     else:
         with engine.begin() as db:
