@@ -37,7 +37,8 @@ def after_request(response):
 engine, users_table, destinations_table = db_init()
 
 @app.errorhandler(404)
-def not_founf(e):
+def not_found(e):
+    """404 handler"""
     return apology("Page not found", 404)
 
 @app.route("/")
