@@ -36,6 +36,9 @@ def after_request(response):
 # Initialise database and tables
 engine, users_table, destinations_table = db_init()
 
+@app.errorhandler(404)
+def not_founf(e):
+    return apology("Page not found", 404)
 
 @app.route("/")
 def index():
@@ -95,11 +98,11 @@ def login():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            return apology("Must provide username", 403)
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("Must provide password", 403)
 
         # Query database for username
         with engine.begin() as db:
@@ -112,7 +115,7 @@ def login():
             ).all()
             # Ensure username exists and password is correct
             if len(rows) != 1 or not check_password_hash(rows[0][1], password):
-                return apology("invalid username and/or password", 403)
+                return apology("Invalid username and/or password", 403)
 
             # Remember which user has logged in
             session["user_id"] = rows[0][0]
