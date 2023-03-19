@@ -4,3 +4,5 @@ flask_session/
 flask_session
 .a.py.swp
 venv/
+.vscode
+.vscode/
