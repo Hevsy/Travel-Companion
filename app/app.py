@@ -72,6 +72,13 @@ def register():
                 return apology("Username already exists")
             else:
                 register_user(username, password, db)
+
+                # Remember which user has registered and log they in
+                session["user_id"] = db.execute(
+                    select(users_table.c["id"]).where(
+                        users_table.c.username == username
+                    )
+                ).all()[0][0]
                 return redirect("/login")
 
 
@@ -93,7 +100,6 @@ def check_if_username_exists(db, username):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
     # Forget any user_id
     session.clear()
 
@@ -171,8 +177,8 @@ def pwdchange():
             return redirect("/")
 
 
-@login_required
 @app.route("/dest")
+@login_required
 def dest():
     """Destinations page"""
     with engine.begin() as db:
@@ -188,13 +194,31 @@ def dest():
         "dest.html", not_empty=bool(len(destinations)), destinations=destinations
     )
 
-@login_required
+
 @app.route("/dest-add", methods=["GET", "POST"])
+@login_required
 def dest_add():
+    """Adding new destination"""
     if request.method == "GET":
-        return render_template ("dest-add.html")
+        return render_template("dest-add.html")
     else:
-        return render_template ("dest-add.html")
+        # args1 = dict(request.form)
+        # name = request.form.get("name")
+        # country = request.form.get("country")
+        # year = request.form.get("year")
+        args1 = {
+            "user_id": session["user_id"],
+            "name": request.form.get("name"),
+            "country": request.form.get("country"),
+            "year": request.form.get("year"),
+        }
+        if not args1["name"]:
+            return apology("Must provide name")
+        args = [{k: v for k, v in args1.items() if v}]
+        with engine.begin() as db:
+            db.execute(insert(destinations_table).values(args))
+            db.commit()
+        return redirect("/dest")
 
 
 if __name__ == "__main__":
