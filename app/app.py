@@ -78,7 +78,7 @@ def register():
 def register_user(username, password, db):
     """Add user to DB"""
     hash = generate_password_hash(password)
-    db.execute(insert(users_table).values(username=username, hash=hash))
+    db.execute(insert(table=users_table).values(username=username, hash=hash))
     db.commit()
 
 
