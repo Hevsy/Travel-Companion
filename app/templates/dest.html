@@ -10,16 +10,30 @@ Destinations
 
 {% block main %}
 <div>
-    <h1 class="h3 mb-1 text-gray-800">Your travel destinations</h1>
+    <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Your travel destinations</h1>
     <p class="mb-4">Whether you already booked a trip or just dreaming about going somewhere, dot your thoughts and
         ideas here. Create and review your destinations here.</p>
 </div>
 <div class="row">
-    <!-- Earnings (Annual) Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
- 
-        {% if not_empty %}
-        {% for row in destinations %}
+        <a href="#" class="btn btn-light btn-lg card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="h1 font-weight-bold text-warning text-capitalize mb-1">
+                            <i class="fa-solid fa-plus fa-xl"></i>
+                        </div>
+                    </div>
+                    <div class="col mr-2">
+                        <div class="text-s mb-0 font-weight-bold text-gray-600">Add destination</div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% if not_empty %}
+    {% for row in destinations %}
+    <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -33,20 +47,22 @@ Destinations
                 </div>
             </div>
         </div>
-        {% endfor %}
-        {% else %}
-        <div class="card border-left-warning shadow h-100 py-2">
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2 border-left-secondary">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="h5 font-weight-bold text-warning text-capitalize mb-1">
+                        <div class="h5 font-weight-bold text-gray-700 text-capitalize mb-1">
                             Nothing here yet!</div>
                         <div class="text-s mb-0 font-weight-bold text-gray-800">Add your first destination</div>
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
     </div>
+    {% endif %}
 </div>
 {% endblock %}
