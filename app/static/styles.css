@@ -2663,6 +2663,24 @@ textarea.form-control.is-invalid {
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+.btn2 {
+    display: inline-block;
+    font-weight: 400;
+    color: #858796;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.35rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .btn {
         transition: none;
@@ -2674,8 +2692,19 @@ textarea.form-control.is-invalid {
     text-decoration: none;
 }
 
+.btn2:hover {
+    color: #858796;
+    text-decoration: none;
+}
+
 .btn:focus,
 .btn.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.btn2:focus,
+.btn2.focus {
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
 }
@@ -2688,6 +2717,11 @@ textarea.form-control.is-invalid {
 .btn:not(:disabled):not(.disabled) {
     cursor: pointer;
 }
+
+.btn2:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
 
 a.btn.disabled,
 fieldset:disabled a.btn {
