@@ -16,6 +16,7 @@ Destinations
 </div>
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4">
+        <!-- Card-button for adding destinations -->
         <a href="/dest-add" class="btn btn-light btn-lg card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -35,37 +36,41 @@ Destinations
     {% if not_empty %}
     {% for row in destinations %}
     <div class="col-xl-3 col-md-6 mb-4">
-        <!-- Dropdown Card Example -->
-        <div class="card shadow">
-        <!-- Card Header - Dropdown -->
-        <div
-            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">{{ row['name'] }}</h6>
-            <div class="dropdown no-arrow">
-                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                    aria-labelledby="dropdownMenuLink">
-                    <div class="dropdown-header">Dropdown Header:</div>
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+        <div class="card shadow btn2 btn-light">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">{{ row['name'] }}</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                        aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header text-l">Destination:</div>
+                        <a class="dropdown-item" href="#">
+                            <i class="fa-solid fa-pen-to-square fa-sm text-gray-400"></i>
+                            Edit
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fa-solid fa-trash fa-sm text-gray-400"></i>
+                            Delete
+                        </a>
+                    </div>
                 </div>
             </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['country'] or '_'}}</div>
+                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['year'] or '_'}}</div>
+            </div>
         </div>
-        <!-- Card Body -->
-        <div class="card-body">
-            <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['country'] or '_'}}</div>
-            <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['year'] or '_'}}</div>
-        </div>
-    </div>
     </div>
     {% endfor %}
     {% else %}
     <div class="col-xl-3 col-md-6 mb-4">
+        <!-- Card when no desstinations saved -->
         <div class="card shadow h-100 py-2 border-left-secondary">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -79,5 +84,28 @@ Destinations
         </div>
     </div>
     {% endif %}
+</div>
+<!-- Delete Modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Please confirm</h5>
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Click "Delete" below to permanently delete this record
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <a class="btn btn-primary" href="/#">Delete</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
