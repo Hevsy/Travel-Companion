@@ -11939,6 +11939,7 @@ a:focus {
 
 .sidebar-light #sidebarToggle::after {
     color: #b7b9cc;
+    color: #e02d1b;
 }
 
 .sidebar-light #sidebarToggle:hover {
