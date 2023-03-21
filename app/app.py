@@ -221,5 +221,24 @@ def dest_add():
         return redirect("/dest")
 
 
+@app.route("/dest-edit", methods=["GET", "POST"])
+@login_required
+def dest_edit():
+    """Editing destination"""
+    if request.method == "GET":
+        return redirect("/dest")
+    else: 
+        return render_template("dest-edit.html")
+
+
+@app.route("/dest-delete", methods=["GET", "POST"])
+@login_required
+def dest_delete():
+    """Deleting destination"""
+    if request.method == "GET":
+        return redirect("/dest")
+    else: 
+        return render_template("dest-edit.html")
+
 if __name__ == "__main__":
     app.run()

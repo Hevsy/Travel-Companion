@@ -48,9 +48,13 @@ Destinations
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header text-l">Destination:</div>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="/dest-edit">
                             <i class="fa-solid fa-pen-to-square fa-sm text-gray-400"></i>
                             Edit
+                        </a>
+                        <a class="dropdown-item" href="/#">
+                            <i class="fa-solid fa-pen-to-square fa-sm text-gray-400"></i>
+                            Mark as complete
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -86,12 +90,12 @@ Destinations
     {% endif %}
 </div>
 <!-- Delete Modal-->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="LabelDeleteModal"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Please confirm</h5>
+                <h5 class="modal-title" id="LabelDeleteModal">Please confirm</h5>
                 <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
@@ -103,7 +107,7 @@ Destinations
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
                     Cancel
                 </button>
-                <a class="btn btn-primary" href="/#">Delete</a>
+                <a class="btn btn-primary" href="/dest-delete">Delete</a>
             </div>
         </div>
     </div>
