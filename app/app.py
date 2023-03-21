@@ -184,6 +184,7 @@ def dest():
     with engine.begin() as db:
         destinations = db.execute(
             select(
+                destinations_table.c.id,
                 destinations_table.c.name,
                 destinations_table.c.country,
                 destinations_table.c.year,
