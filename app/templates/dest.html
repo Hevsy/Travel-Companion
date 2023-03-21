@@ -36,14 +36,14 @@ Destinations
     {% for row in destinations %}
     <div class="col-xl-3 col-md-6 mb-4">
         <!-- Dropdown Card Example -->
-        <div class="card shadow mb-4">
+        <div class="card shadow">
         <!-- Card Header - Dropdown -->
         <div
             class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">{{ row['name'] }}</h6>
             <div class="dropdown no-arrow">
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
@@ -58,8 +58,8 @@ Destinations
         </div>
         <!-- Card Body -->
         <div class="card-body">
-            <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['country'] or '.'}}</div>
-            <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['year'] or '.'}}</div>
+            <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['country'] or '_'}}</div>
+            <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['year'] or '_'}}</div>
         </div>
     </div>
     </div>
