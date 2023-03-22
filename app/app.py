@@ -239,7 +239,7 @@ def dest_delete():
     if request.method == "GET":
         return redirect("/dest")
     else: 
-        return render_template("dest-edit.html")
+        return redirect("/dest")
 
 if __name__ == "__main__":
     app.run()
