@@ -42,25 +42,25 @@ Destinations
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-600"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header text-l">Destination:</div>
+                        <div class="dropdown-header text-l text-gray-600">Destination:</div>
                         <form action="/dest-edit" method="post" role="form">
                             <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
                             <button class="dropdown-item" type="submit">
-                                <i class="fa-solid fa-pen-to-square fa-sm text-gray-400"></i>
+                                <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
                                 Edit
                             </button>
                         </form>
                         <a class="dropdown-item" href="/#">
-                            <i class="fa-regular fa-square-check fa-sm text-gray-400"></i>
+                            <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
                             Mark as complete
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                            <i class="fa-solid fa-trash fa-sm text-gray-400"></i>
+                            <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
                             Delete
                         </a>
                     </div>
