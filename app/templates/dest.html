@@ -49,6 +49,7 @@ Destinations
                         <div class="dropdown-header text-l text-gray-600">Destination:</div>
                         <form action="/dest-edit" method="post" role="form">
                             <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
+                            <input type="hidden" type="text" id="action" name="action" value="call">
                             <button class="dropdown-item" type="submit">
                                 <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
                                 Edit

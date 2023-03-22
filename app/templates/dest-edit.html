@@ -33,6 +33,7 @@ Edit destination
                     <input class="form-control w-100" id="year" name="year"
                         placeholder="Year you're planning to go (optional)" type="text" value="{{ data['year'] or ''}}">
                 </div>
+                <input type="hidden" type="text" id="action" name="action" value="edit">
                 <button class="btn btn-primary my-2" type="submit">Change</button>
             </form>
         </div>

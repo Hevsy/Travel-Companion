@@ -152,8 +152,10 @@ def logout():
 def pwdchange():
     """Change user's password"""
     if request.method == "GET":
+        # Return password change form
         return render_template("pwdchange.html")
     else:
+        # Change the password
         with engine.begin() as db:
             hash = db.execute(
                 select(users_table.c.hash).where(users_table.c.id == session["user_id"])
@@ -161,12 +163,14 @@ def pwdchange():
             old_password = request.form.get("old_password")
             new_password = request.form.get("new_password")
             confirmation = request.form.get("confirmation")
+            # Check input for valifity
             if not old_password or not new_password or not confirmation:
                 return apology("Must provide old and new passwords", 403)
             elif not check_password_hash(hash, old_password):  # type: ignore
                 return apology("Invalid password", 403)
             elif new_password != confirmation:
                 return apology("Passwords do not match!", 403)
+            # Update database with new password
             new_hash = generate_password_hash(new_password)
             db.execute(
                 update(users_table)
@@ -182,6 +186,7 @@ def pwdchange():
 def dest():
     """Destinations page"""
     with engine.begin() as db:
+        # Get all the destinations for the current user and pass to the template
         destinations = db.execute(
             select(
                 destinations_table.c.id,
@@ -203,10 +208,7 @@ def dest_add():
     if request.method == "GET":
         return render_template("dest-add.html")
     else:
-        # args1 = dict(request.form)
-        # name = request.form.get("name")
-        # country = request.form.get("country")
-        # year = request.form.get("year")
+        # Create a list of arguments for SQLALchemy
         args1 = {
             "user_id": session["user_id"],
             "name": request.form.get("name"),
@@ -214,7 +216,7 @@ def dest_add():
             "year": request.form.get("year"),
         }
         if not args1["name"]:
-            return apology("Must provide name")
+            return apology("Must provide name", 403)
         args = [{k: v for k, v in args1.items() if v}]
         with engine.begin() as db:
             db.execute(insert(destinations_table).values(args))
@@ -227,25 +229,52 @@ def dest_add():
 def dest_edit():
     """Editing destination"""
     if request.method == "GET":
+        # This function always requires input from the front-end - redirect if no input
         return redirect("/dest")
     else:
+        action = request.form.get("action")
         dest_id = request.form.get("id")
-        with engine.begin() as db:
-            data = db.execute(
-                select(
-                    destinations_table.c.id,
-                    destinations_table.c.name,
-                    destinations_table.c.country,
-                    destinations_table.c.year,
-                    destinations_table.c.completed,
-                ).where(
-                    and_(
-                        destinations_table.c.user_id == session["user_id"],
-                        destinations_table.c.id == dest_id,
+        if action == "call":
+            with engine.begin() as db:
+                data = db.execute(
+                    select(
+                        destinations_table.c.id,
+                        destinations_table.c.name,
+                        destinations_table.c.country,
+                        destinations_table.c.year,
+                        destinations_table.c.completed,
+                    ).where(
+                        and_(
+                            destinations_table.c.user_id == session["user_id"],
+                            destinations_table.c.id == dest_id,
+                        )
                     )
+                ).all()[0]
+                return render_template("dest-edit.html", data=data)
+        elif action == "edit":
+            args1 = {
+                "name": request.form.get("name"),
+                "country": request.form.get("country"),
+                "year": request.form.get("year"),
+            }
+            if not args1["name"]:
+                return apology("Must provide name", 403)
+            args = [{k: v for k, v in args1.items() if v}]
+            with engine.begin() as db:
+                db.execute(
+                    update(destinations_table)
+                    .where(
+                        and_(
+                            destinations_table.c.user_id == session["user_id"],
+                            destinations_table.c.id == dest_id,
+                        )
+                    )
+                    .values(args)
                 )
-            ).all()[0]
-            return render_template("dest-edit.html", data=data)
+                db.commit()
+            return redirect("/dest")
+        else:
+            return apology("Invalid operation call", 400)
 
 
 @app.route("/dest-delete", methods=["GET", "POST"])
