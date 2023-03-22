@@ -48,10 +48,13 @@ Destinations
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header text-l">Destination:</div>
-                        <a class="dropdown-item" href="/dest-edit">
-                            <i class="fa-solid fa-pen-to-square fa-sm text-gray-400"></i>
-                            Edit
-                        </a>
+                        <form action="/dest-edit" method="post" role="form">
+                            <input type="hidden" type="text" id="id" value="{{ row['id'] }}">
+                            <button class="dropdown-item" type="submit">
+                                <i class="fa-solid fa-pen-to-square fa-sm text-gray-400"></i>
+                                Edit
+                            </button>
+                        </form>
                         <a class="dropdown-item" href="/#">
                             <i class="fa-regular fa-square-check fa-sm text-gray-400"></i>
                             Mark as complete
@@ -68,7 +71,6 @@ Destinations
             <div class="card-body">
                 <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['country'] or '_'}}</div>
                 <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['year'] or '_'}}</div>
-                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['id'] or '_'}}</div>
             </div>
         </div>
     </div>
@@ -95,7 +97,6 @@ Destinations
                         <input type="hidden" type="text" id="id" value="{{ row['id'] }}">
                         <button class="btn btn-primary" type="submit">Delete</button>
                     </form>
-                    
                 </div>
             </div>
         </div>
