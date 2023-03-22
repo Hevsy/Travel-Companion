@@ -1,4 +1,4 @@
-from sqlalchemy import and_, insert, select, update
+from sqlalchemy import and_, delete, insert, select, update
 from flask import Flask, redirect, render_template, request, session
 from flask_session import Session
 from .etc.functions import login_required, apology
@@ -238,8 +238,13 @@ def dest_edit():
                     destinations_table.c.country,
                     destinations_table.c.year,
                     destinations_table.c.completed,
-                ).where(and_(destinations_table.c.user_id == session["user_id"], destinations_table.c.id == dest_id))
-            ).all()
+                ).where(
+                    and_(
+                        destinations_table.c.user_id == session["user_id"],
+                        destinations_table.c.id == dest_id,
+                    )
+                )
+            ).all()[0]
             return render_template("dest-edit.html", data=data)
 
 
@@ -249,8 +254,19 @@ def dest_delete():
     """Deleting destination"""
     if request.method == "GET":
         return redirect("/dest")
-    else: 
-        return apology("Deleted!")
+    else:
+        dest_id = request.form.get("id")
+        with engine.begin() as db:
+            data = db.execute(
+                delete(destinations_table).where(
+                    and_(
+                        destinations_table.c.user_id == session["user_id"],
+                        destinations_table.c.id == dest_id,
+                    )
+                )
+            )
+        return redirect("/dest")
+
 
 if __name__ == "__main__":
     app.run()

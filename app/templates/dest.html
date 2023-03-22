@@ -19,10 +19,9 @@ Destinations
         <!-- Card-button for adding destinations -->
         <a href="/dest-add" class="btn btn-light btn-lg card border-left-primary shadow h-100 py-2">
             <div class="card-body">
-                <div class="row no-gutters align-items-center">
+                <div class="row no-gutters align-items-center align-middle">
                     <div class="col mr-2">
                         <div class="h1 font-weight-bold text-primary text-capitalize mb-1">
-                            <p> </p>
                             <i class="fa-solid fa-plus fa-xl"></i>
                         </div>
                     </div>
@@ -49,7 +48,7 @@ Destinations
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header text-l">Destination:</div>
                         <form action="/dest-edit" method="post" role="form">
-                            <input type="hidden" type="text" id="id" value="{{ row['id'] }}">
+                            <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
                             <button class="dropdown-item" type="submit">
                                 <i class="fa-solid fa-pen-to-square fa-sm text-gray-400"></i>
                                 Edit
@@ -94,7 +93,7 @@ Destinations
                         Cancel
                     </button>
                     <form action="/dest-delete" method="post" role="form">
-                        <input type="hidden" type="text" id="id" value="{{ row['id'] }}">
+                        <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
                         <button class="btn btn-primary" type="submit">Delete</button>
                     </form>
                 </div>
