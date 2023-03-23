@@ -252,6 +252,7 @@ def dest_edit():
                 ).all()[0]
                 return render_template("dest-edit.html", data=data)
         elif action == "edit":
+        # Create a list of arguments for SQLALchemy
             args1 = {
                 "name": request.form.get("name"),
                 "country": request.form.get("country"),
