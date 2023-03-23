@@ -221,7 +221,7 @@ def dest_add():
         with engine.begin() as db:
             db.execute(
                 insert(destinations_table)
-                .values(args))
+                .values(args))  # type: ignore
             db.commit()
         return redirect("/dest")
 
@@ -267,7 +267,7 @@ def dest_edit():
                 db.execute(
                     update(destinations_table)
                     .where(destinations_table.c.id == dest_id)
-                    .values(args)
+                    .values(args)  # type: ignore
                 )
                 db.commit()
             return redirect("/dest")
