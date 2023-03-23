@@ -217,7 +217,7 @@ def dest_add():
         }
         if not args1["name"]:
             return apology("Must provide name", 403)
-        args = [{k: v for k, v in args1.items() if v}]
+        args = {k: v for k, v in args1.items() if v}
         with engine.begin() as db:
             db.execute(
                 insert(destinations_table)
