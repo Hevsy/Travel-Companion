@@ -219,7 +219,9 @@ def dest_add():
             return apology("Must provide name", 403)
         args = [{k: v for k, v in args1.items() if v}]
         with engine.begin() as db:
-            db.execute(insert(destinations_table).values(args))
+            db.execute(
+                insert(destinations_table)
+                .values(args))
             db.commit()
         return redirect("/dest")
 
@@ -233,7 +235,7 @@ def dest_edit():
         return redirect("/dest")
     else:
         action = request.form.get("action")
-        dest_id = request.form.get("id")
+        dest_id = str(request.form.get("id"))
         if action == "call":
             with engine.begin() as db:
                 data = db.execute(
@@ -252,7 +254,7 @@ def dest_edit():
                 ).all()[0]
                 return render_template("dest-edit.html", data=data)
         elif action == "edit":
-        # Create a list of arguments for SQLALchemy
+            # Create a list of arguments for SQLALchemy
             args1 = {
                 "name": request.form.get("name"),
                 "country": request.form.get("country"),
@@ -264,12 +266,7 @@ def dest_edit():
             with engine.begin() as db:
                 db.execute(
                     update(destinations_table)
-                    .where(
-                        and_(
-                            destinations_table.c.user_id == session["user_id"],
-                            destinations_table.c.id == dest_id,
-                        )
-                    )
+                    .where(destinations_table.c.id == dest_id)
                     .values(args)
                 )
                 db.commit()
