@@ -219,9 +219,7 @@ def dest_add():
             return apology("Must provide name", 403)
         args = {k: v for k, v in args1.items() if v}
         with engine.begin() as db:
-            db.execute(
-                insert(destinations_table)
-                .values(args))  # type: ignore
+            db.execute(insert(destinations_table).values(args))  # type: ignore
             db.commit()
         return redirect("/dest")
 
@@ -266,7 +264,12 @@ def dest_edit():
             with engine.begin() as db:
                 db.execute(
                     update(destinations_table)
-                    .where(destinations_table.c.id == dest_id)
+                    .where(
+                        and_(
+                            destinations_table.c.user_id == session["user_id"],
+                            destinations_table.c.id == dest_id,
+                        )
+                    )
                     .values(args)  # type: ignore
                 )
                 db.commit()
@@ -312,9 +315,8 @@ def ideas():
                     ideas.c.map_link,
                 ).where(ideas.c.dest_id == request.form.get("id"))
             ).all()
-            return render_template(
-            "ideas.html", not_empty=bool(len(data)), data=data
-            )
+            return render_template("ideas.html", not_empty=bool(len(data)), data=data)
+
 
 if __name__ == "__main__":
     app.run()
