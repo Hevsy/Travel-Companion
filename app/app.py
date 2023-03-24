@@ -295,5 +295,26 @@ def dest_delete():
         return redirect("/dest")
 
 
+@app.route("/ideas", methods=["GET", "POST"])
+@login_required
+def ideas():
+    """Ideas page for selected destination"""
+    if request.method == "GET":
+        return redirect("/dest")
+    else:
+        with engine.begin() as db:
+            # Get all the destinations for the current user and pass to the template
+            data = db.execute(
+                select(
+                    ideas.c.id,
+                    ideas.c.descriprion,
+                    ideas.c.link,
+                    ideas.c.map_link,
+                ).where(ideas.c.dest_id == request.form.get("id"))
+            ).all()
+            return render_template(
+            "ideas.html", not_empty=bool(len(data)), data=data
+            )
+
 if __name__ == "__main__":
     app.run()
