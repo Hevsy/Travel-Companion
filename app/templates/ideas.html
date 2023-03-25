@@ -5,13 +5,15 @@ Ideas
 {% endblock %}
 
 {% block title2 %}
-{{ data['dest_name'] }}
+{{ dest['name'] }} {{ dest['year']  or ''}}
 {% endblock %}
 
 {% block main %}
 <div>
-    <h1 class="h3 mb-1 text-gray-800 font-weight-bold">{{ data['name'] }}</h1>
-    <p class="mb-4">A place to store your places, ideas, links</p>
+    <h1 class="h3 mb-1 text-gray-800 font-weight-bold">{{ dest['name'] }}</h1>
+    <h2 class="h4 mb-1 text-gray-600">{{ dest['country']  or ''}}</h1>
+    <h2 class="h4 mb-1 text-gray-600">{{ dest['year']  or ''}}</h1>
+    <p class="mb-4">A place to store your places of interest, ideas, links</p>
 </div>
 <div class="row">
 

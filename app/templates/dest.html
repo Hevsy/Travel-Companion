@@ -35,48 +35,47 @@ Destinations
     {% if not_empty %}
     {% for row in destinations %}
     <div class="col-xl-3 col-md-6 mb-4">
-        <form action="/ideas" method="post">
-            <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
-            <div class="card shadow btn2 btn-light" type="submit">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ row['name'] }}</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-600"></i>
+        <div class="card shadow">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">{{ row['name'] }}</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-600"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                        aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header text-l text-gray-600">Destination:</div>
+                        <form action="/dest-edit" method="post" role="form">
+                            <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
+                            <input type="hidden" type="text" id="action" name="action" value="call">
+                            <button class="dropdown-item" type="submit">
+                                <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
+                                Edit
+                            </button>
+                        </form>
+                        <a class="dropdown-item" href="/#">
+                            <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
+                            Mark as complete
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header text-l text-gray-600">Destination:</div>
-                            <form action="/dest-edit" method="post" role="form">
-                                <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
-                                <input type="hidden" type="text" id="action" name="action" value="call">
-                                <button class="dropdown-item" type="submit">
-                                    <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
-                                    Edit
-                                </button>
-                            </form>
-                            <a class="dropdown-item" href="/#">
-                                <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
-                                Mark as complete
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ row['id'] }}">
-                                <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
-                                Delete
-                            </a>
-                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ row['id'] }}">
+                            <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
+                            Delete
+                        </a>
                     </div>
                 </div>
-                <!-- Card Body -->
-                <div class="card-body">
+            </div>
+            <!-- Card Body -->
+            <form action="/ideas" href="/ideas" method="post">
+                <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
+                <button class="col-xl card-body btn2 btn-light h-100 no-gutters align-items-center align-middle" type="submit">
                     <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['country'] or '_'}}</div>
                     <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['year'] or '_'}}</div>
-                </div>
-            </div>
-        </form>
+                </button>
+            </form>
+        </div>
     </div>
     <!-- Delete Modal-->
     <div class="modal fade" id="deleteModal{{ row['id'] }}" tabindex="-1" role="dialog"

@@ -48,6 +48,20 @@ def db_init():
         Column("year", Integer),
         Column("completed", Boolean),
     )
+
+    ideas_table = Table(
+        "ideas",
+        meta,
+        Column("id", Integer, primary_key=True),
+        Column("user_id", Integer, ForeignKey("users.id"), nullable=False),
+        Column("dest_id", Integer, ForeignKey("destinations.id"), nullable=False),
+        Column("description", String(60)),
+        Column("notes", String(255)),
+        Column("link", String(2000)),
+        Column("map_link", String(2000)),
+        Column("completed", Boolean),
+    )
+
     # Create tables
     meta.create_all(engine, checkfirst=True)
-    return engine, users_table, destinations_table
+    return engine, users_table, destinations_table, ideas_table

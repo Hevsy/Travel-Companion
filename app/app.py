@@ -34,7 +34,7 @@ def after_request(response):
 
 
 # Initialise database and tables
-engine, users_table, destinations_table = db_init()
+engine, users_table, destinations_table, ideas_table = db_init()
 
 
 @app.errorhandler(404)
@@ -305,17 +305,36 @@ def ideas():
     if request.method == "GET":
         return redirect("/dest")
     else:
+        dest_id = request.form.get("id")
         with engine.begin() as db:
-            # Get all the destinations for the current user and pass to the template
+            # Get all the ideas for the current destination and pass to the template
             data = db.execute(
                 select(
-                    ideas.c.id,
-                    ideas.c.descriprion,
-                    ideas.c.link,
-                    ideas.c.map_link,
-                ).where(ideas.c.dest_id == request.form.get("id"))
+                    ideas_table.c.id,
+                    ideas_table.c.description,
+                    ideas_table.c.notes,
+                    ideas_table.c.link,
+                    ideas_table.c.map_link,
+                ).where(
+                    and_(
+                        ideas_table.c.user_id == session["user_id"],
+                        ideas_table.c.id == dest_id,
+                    )
+                )
             ).all()
-            return render_template("ideas.html", not_empty=bool(len(data)), data=data)
+            dest = db.execute(
+                select(                        
+                        destinations_table.c.name,
+                        destinations_table.c.country,
+                        destinations_table.c.year
+                    ).where(
+                        and_(
+                            destinations_table.c.user_id == session["user_id"],
+                            destinations_table.c.id == dest_id,
+                        )
+                    )
+                ).all()[0]
+            return render_template("ideas.html", not_empty=bool(len(data)), data=data, dest=dest)
 
 
 if __name__ == "__main__":
