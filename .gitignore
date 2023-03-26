@@ -6,3 +6,4 @@ flask_session
 venv/
 .vscode
 .vscode/
+TC.session.sql
