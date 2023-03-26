@@ -322,19 +322,22 @@ def ideas():
                     )
                 )
             ).all()
+            # Get all the destination's data to show in the template as well
             dest = db.execute(
-                select(                        
-                        destinations_table.c.name,
-                        destinations_table.c.country,
-                        destinations_table.c.year
-                    ).where(
-                        and_(
-                            destinations_table.c.user_id == session["user_id"],
-                            destinations_table.c.id == dest_id,
-                        )
+                select(
+                    destinations_table.c.name,
+                    destinations_table.c.country,
+                    destinations_table.c.year,
+                ).where(
+                    and_(
+                        destinations_table.c.user_id == session["user_id"],
+                        destinations_table.c.id == dest_id,
                     )
-                ).all()[0]
-            return render_template("ideas.html", not_empty=bool(len(data)), data=data, dest=dest)
+                )
+            ).all()[0]
+            return render_template(
+                "ideas.html", not_empty=bool(len(data)), data=data, dest=dest
+            )
 
 
 if __name__ == "__main__":
