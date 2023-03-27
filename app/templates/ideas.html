@@ -5,59 +5,72 @@ Ideas
 {% endblock %}
 
 {% block title2 %}
-{{ dest['name'] }} {{ dest['year']  or ''}}
+{{ dest['name'] }} {{ dest['year'] or ''}}
 {% endblock %}
 
 {% block main %}
 <div>
     <h1 class="h3 mb-1 text-gray-800 font-weight-bold">{{ dest['name'] }}</h1>
-    <h2 class="h4 mb-1 text-gray-600">{{ dest['country']  or ''}}</h1>
-    <h2 class="h4 mb-1 text-gray-600">{{ dest['year']  or ''}}</h1>
-    <p class="mb-4">A place to store your places of interest, ideas, links</p>
+    <h2 class="h4 mb-1 text-gray-600">{{ dest['country'] or ''}}</h1>
+        <h2 class="h4 mb-1 text-gray-600">{{ dest['year'] or ''}}</h1>
+            <p class="mb-4">A place to store your places of interest, ideas, links</p>
 </div>
-<div class="row">
-    {% for row in dest | groupby('day') %}
-    <div class="col-lg-6">
-
-        <!-- Dropdown Card Example -->
-        <div class="card shadow mb-4">
+<div class="col">
+    {% for day, group in data | groupby('day') %}
+    {% for item in group %}
+    <div class="row">
+        <div class="card shadow">
             <!-- Card Header - Dropdown -->
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Day {{ row['day'] }}</h6>
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">{{ item['day'] }}</h6>
                 <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-600"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
+                        <div class="dropdown-header text-l text-gray-600">Day:</div>
+                        <form action="#" method="post" role="form">
+                            <input type="hidden" type="text" id="id" name="id" value="{{ item['id'] }}">
+                            <input type="hidden" type="text" id="action" name="action" value="call">
+                            <button class="dropdown-item" type="submit">
+                                <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
+                                Edit
+                            </button>
+                        </form>
+                        <a class="dropdown-item" href="#">
+                            <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
+                            Mark as complete
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ item['id'] }}">
+                            <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
+                            Delete
+                        </a>
+                    </div>
                 </div>
             </div>
             <!-- Card Body -->
-            <div class="card-body">
-                Dropdown menus can be placed in the card header in order to extend the functionality
-                of a basic card. In this dropdown card example, the Font Awesome vertical ellipsis
-                icon in the card header can be clicked on in order to toggle a dropdown menu.
+            <div class="col-xl card-body btn2 btn-light h-100 no-gutters align-items-center align-middle" type="submit">
+                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['description'] or ''}}</div>
+                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['notes'] or ''}}</div>
+                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['link'] or ''}}</div>
+                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['map-link'] or ''}}</div>
             </div>
         </div>
+    </div>
+    {% endfor %}
     {% else %}
-        
-    {% endfor %}                        <div class="col-lg-6">
-
+    <div class="col">
         <!-- Dropdown Card Example -->
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <div class="card-header py-3 d-flex flex-row justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
                 <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
@@ -73,5 +86,24 @@ Ideas
                 Nothing here yet. Add your ideas below!
             </div>
         </div>
+    </div>
+    {% endfor %}
+    <div class="col">
+        <!-- Card-button for adding destinations -->
+        <a href="#" class="btn btn-light btn-lg card border-left-primary shadow h-100 py-2 justify-content-start">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center justify-content-start">
+                    <div class="col-2 align-items-center mr-4">
+                        <div class="row h1 font-weight-bold text-primary text-capitalize mb-1">
+                            <i class="fa-solid fa-plus fa-xl"></i>
+                        </div>
+                    </div>
+                    <div class="col-3 align-items-center">
+                        <div class="row text-s mb-0 mt-0 font-weight-bold text-gray-600">Add a day to your plans</div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>
 {% endblock %}
