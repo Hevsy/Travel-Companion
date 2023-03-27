@@ -59,6 +59,7 @@ def db_init():
         Column("notes", String(255)),
         Column("link", String(2000)),
         Column("map_link", String(2000)),
+        Column("day", Integer, default=1, nullable=False),
         Column("completed", Boolean),
     )
 

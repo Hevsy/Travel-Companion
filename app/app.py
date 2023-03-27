@@ -315,6 +315,7 @@ def ideas():
                     ideas_table.c.notes,
                     ideas_table.c.link,
                     ideas_table.c.map_link,
+                    ideas_table.c.day,
                 ).where(
                     and_(
                         ideas_table.c.user_id == session["user_id"],
@@ -335,9 +336,7 @@ def ideas():
                     )
                 )
             ).all()[0]
-            return render_template(
-                "ideas.html", not_empty=bool(len(data)), data=data, dest=dest
-            )
+            return render_template("ideas.html", data=data, dest=dest)
 
 
 if __name__ == "__main__":
