@@ -75,15 +75,45 @@ Ideas
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                         aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><a class="dropdown-item" href="#">Move up</a></li>
+                        <li><a class="dropdown-item" href="#">Move down</a></li>
+                        <li><a class="dropdown-item" href="#">Complete</a></li>
+                        <li><a class="dropdown-item" href="#">Complete</a></li>
                     </ul>
                 </div>
             </div>
             <!-- Card Body -->
             <div class="card-body">
                 Nothing here yet. Add your ideas below!
+            </div>
+            <div class="card border-left-success shadow p-2 m-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <form action="#" method="post">
+                                <input type="hidden" type="text" id="day" name="day" value="1">
+                                <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest['id'] }}">
+                                <input type="hidden" type="text" id="action" name="action" value="add">
+                                <div class="mb-2">
+                                    <label for="description" class="form-label text-black">Description</label>
+                                    <input autofocus class="form-control w-100" id="description" name="description"
+                                        placeholder="Describe idea/place" type="text">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="notes" class="form-label text-black">Notes</label>
+                                    <input class="form-control w-100" id="notes" name="notes"
+                                        placeholder="Notes (optional)" type="text">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="link" class="form-label text-black">Link</label>
+                                    <input class="form-control w-100" id="link" name="link"
+                                        placeholder="A link to webpage" type="text">
+                                </div>
+                                <button class="btn btn-primary my-2" type="submit">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -93,13 +123,14 @@ Ideas
         <a href="#" class="btn btn-light btn-lg card border-left-primary shadow h-100 py-2 justify-content-start">
             <div class="card-body">
                 <div class="row no-gutters align-items-center justify-content-start">
-                    <div class="col-2 align-items-center mr-4">
+                    <div class="col-2 h-auto align-items-center mr-4">
                         <div class="row h1 font-weight-bold text-primary text-capitalize mb-1">
-                            <i class="fa-solid fa-plus fa-xl"></i>
+                            <div class="text-xl-left fa-solid fa-plus fa-l"></div>
                         </div>
                     </div>
-                    <div class="col-3 align-items-center">
-                        <div class="row text-s mb-0 mt-0 font-weight-bold text-gray-600">Add a day to your plans</div>
+                    <div class="col-3 h-auto align-items-center">
+                        <div class="row text-md-left mb-0 mt-0 font-weight-bold text-gray-600">Add a day to your plans
+                        </div>
                     </div>
                 </div>
             </div>

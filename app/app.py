@@ -305,38 +305,55 @@ def ideas():
     if request.method == "GET":
         return redirect("/dest")
     else:
-        dest_id = request.form.get("id")
-        with engine.begin() as db:
-            # Get all the ideas for the current destination and pass to the template
-            data = db.execute(
-                select(
-                    ideas_table.c.id,
-                    ideas_table.c.description,
-                    ideas_table.c.notes,
-                    ideas_table.c.link,
-                    ideas_table.c.map_link,
-                    ideas_table.c.day,
-                ).where(
-                    and_(
-                        ideas_table.c.user_id == session["user_id"],
-                        ideas_table.c.id == dest_id,
+        if not request.form.get("action"):
+            dest_id = request.form.get("id")
+            with engine.begin() as db:
+                # Get all the ideas for the current destination and pass to the template
+                data = db.execute(
+                    select(
+                        ideas_table.c.id,
+                        ideas_table.c.description,
+                        ideas_table.c.notes,
+                        ideas_table.c.link,
+                        ideas_table.c.map_link,
+                        ideas_table.c.day,
+                    ).where(
+                        and_(
+                            ideas_table.c.user_id == session["user_id"],
+                            ideas_table.c.id == dest_id,
+                        )
                     )
-                )
-            ).all()
-            # Get all the destination's data to show in the template as well
-            dest = db.execute(
-                select(
-                    destinations_table.c.name,
-                    destinations_table.c.country,
-                    destinations_table.c.year,
-                ).where(
-                    and_(
-                        destinations_table.c.user_id == session["user_id"],
-                        destinations_table.c.id == dest_id,
+                ).all()
+                # Get all the destination's data to show in the template as well
+                dest = db.execute(
+                    select(
+                        destinations_table.c.name,
+                        destinations_table.c.country,
+                        destinations_table.c.year,
+                        destinations_table.c.id,
+                    ).where(
+                        and_(
+                            destinations_table.c.user_id == session["user_id"],
+                            destinations_table.c.id == dest_id,
+                        )
                     )
-                )
-            ).all()[0]
-            return render_template("ideas.html", data=data, dest=dest)
+                ).all()[0]
+                return render_template("ideas.html", data=data, dest=dest)
+        elif request.form.get("action") == "add":
+            # Create a list of arguments for SQLALchemy
+            args1 = {
+                "user_id": session["user_id"],
+                "name": request.form.get("name"),
+                "country": request.form.get("country"),
+                "year": request.form.get("year"),
+            }
+            if not args1["name"]:
+                return apology("Must provide name", 403)
+            args = {k: v for k, v in args1.items() if v}
+            with engine.begin() as db:
+                db.execute(insert(destinations_table).values(args))  # type: ignore
+                db.commit()
+            return redirect("/dest")
 
 
 if __name__ == "__main__":
