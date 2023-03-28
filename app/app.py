@@ -1,10 +1,12 @@
-from sqlalchemy import and_, delete, insert, select, update
+from cmath import log
 from flask import Flask, redirect, render_template, request, session
-from flask_session import Session
-from .etc.functions import login_required, apology
+from sqlalchemy import and_, delete, insert, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
-from .etc.db_init import db_init
 
+from flask_session import Session
+
+from .etc.db_init import db_init
+from .etc.functions import apology, login_required
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -215,6 +217,7 @@ def dest_add():
             "country": request.form.get("country"),
             "year": request.form.get("year"),
         }
+        # Check for required input - name must be provided
         if not args1["name"]:
             return apology("Must provide name", 403)
         args = {k: v for k, v in args1.items() if v}
@@ -305,55 +308,68 @@ def ideas():
     if request.method == "GET":
         return redirect("/dest")
     else:
-        if not request.form.get("action"):
-            dest_id = request.form.get("id")
-            with engine.begin() as db:
-                # Get all the ideas for the current destination and pass to the template
-                data = db.execute(
-                    select(
-                        ideas_table.c.id,
-                        ideas_table.c.description,
-                        ideas_table.c.notes,
-                        ideas_table.c.link,
-                        ideas_table.c.map_link,
-                        ideas_table.c.day,
-                    ).where(
-                        and_(
-                            ideas_table.c.user_id == session["user_id"],
-                            ideas_table.c.id == dest_id,
-                        )
+        dest_id = request.form.get("id")
+        with engine.begin() as db:
+            # Get all the ideas for the current destination and pass to the template
+            data = db.execute(
+                select(
+                    ideas_table.c.id,
+                    ideas_table.c.description,
+                    ideas_table.c.notes,
+                    ideas_table.c.link,
+                    ideas_table.c.map_link,
+                    ideas_table.c.day,
+                ).where(
+                    and_(
+                        ideas_table.c.user_id == session["user_id"],
+                        ideas_table.c.dest_id == dest_id,
                     )
-                ).all()
-                # Get all the destination's data to show in the template as well
-                dest = db.execute(
-                    select(
-                        destinations_table.c.name,
-                        destinations_table.c.country,
-                        destinations_table.c.year,
-                        destinations_table.c.id,
-                    ).where(
-                        and_(
-                            destinations_table.c.user_id == session["user_id"],
-                            destinations_table.c.id == dest_id,
-                        )
+                )
+            ).all()
+            # Get all the destination's data to show in the template as well
+            dest = db.execute(
+                select(
+                    destinations_table.c.name,
+                    destinations_table.c.country,
+                    destinations_table.c.year,
+                    destinations_table.c.id,
+                ).where(
+                    and_(
+                        destinations_table.c.user_id == session["user_id"],
+                        destinations_table.c.id == dest_id,
                     )
-                ).all()[0]
-                return render_template("ideas.html", data=data, dest=dest)
-        elif request.form.get("action") == "add":
-            # Create a list of arguments for SQLALchemy
-            args1 = {
-                "user_id": session["user_id"],
-                "name": request.form.get("name"),
-                "country": request.form.get("country"),
-                "year": request.form.get("year"),
-            }
-            if not args1["name"]:
-                return apology("Must provide name", 403)
-            args = {k: v for k, v in args1.items() if v}
-            with engine.begin() as db:
-                db.execute(insert(destinations_table).values(args))  # type: ignore
-                db.commit()
-            return redirect("/dest")
+                )
+            ).all()[0]
+            return render_template("ideas.html", data=data, dest=dest)
+
+
+@app.route("/idea-add", methods=["GET", "POST"])
+@login_required
+def idea_add():
+    """Editing destination"""
+    if request.method == "GET":
+        # This function always requires input from the front-end - redirect if no input
+        return redirect("/dest")
+    else:
+        # Create a list of arguments for SQLALchemy
+        args1 = {
+            "user_id": session["user_id"],
+            "dest_id": request.form.get("dest_id"),
+            "description": request.form.get("description"),
+            "notes": request.form.get("notes"),
+            "link": request.form.get("link"),
+            "map_link": request.form.get("map_link"),
+            "day": request.form.get("day"),
+            "completed": False,
+        }
+        # Check for required input - description must be provided
+        if not args1["description"]:
+            return apology("Must provide description", 403)
+        args = {k: v for k, v in args1.items() if v}
+        with engine.begin() as db:
+            db.execute(insert(ideas_table).values(args))  # type: ignore
+            db.commit()
+        return redirect("/ideas")
 
 
 if __name__ == "__main__":
