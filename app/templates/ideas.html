@@ -15,125 +15,137 @@ Ideas
         <h2 class="h4 mb-1 text-gray-600">{{ dest['year'] or ''}}</h1>
             <p class="mb-4">A place to store your places of interest, ideas, links</p>
 </div>
-<div class="col">
+<div class="col-xl col-md-6 mb-4">
     {% for day, group in data | groupby('day') %}
-    {% for item in group %}
-    <div class="row">
-        <div class="card shadow">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Day {{ item['day'] }}</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+    <!-- Card showing a destination -->
+    <div class="card shadow">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Day {{ day }}</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-600"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                aria-labelledby="dropdownMenuLink">
-                <div class="dropdown-header text-l text-gray-600">Day:</div>
-                <form action="#" method="post" role="form">
-                    <input type="hidden" type="text" id="id" name="id" value="{{ item['id'] }}">
-                    <input type="hidden" type="text" id="action" name="action" value="call">
-                    <button class="dropdown-item" type="submit">
-                        <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
-                        Edit
-                    </button>
-                </form>
-                <a class="dropdown-item" href="#">
-                            <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
-                            Mark as complete
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ item['id'] }}">
-                            <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
-                            Delete
-                        </a>
-                    </div>
+                    aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-header text-l text-gray-600">Day:</div>
+                    <form action="#" method="post" role="form">
+                        <input type="hidden" type="text" id="id" name="id" value="day">
+                        <button class="dropdown-item" type="submit">
+                            <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
+                            Edit
+                        </button>
+                    </form>
+                    <a class="dropdown-item" href="#">
+                        <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
+                        Mark as complete
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ day }}">
+                        <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
+                        Delete
+                    </a>
                 </div>
             </div>
-            <!-- Card Body -->
-            <div class="col-xl card-body h-100 no-gutters align-items-center">
-                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['description'] or ''}}</div>
-                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['notes'] or ''}}</div>
+        </div>
+        <!-- Card Body -->
+        {% for item in group %}
+        <form action="#" href="#" method="post">
+            <input type="hidden" type="text" id="id" name="id" value="{{ day }}">
+            <button class="col-xl card-body btn2 btn-light h-100 no-gutters align-items-center align-middle"
+                type="submit">
+                <div class="text-s mb-0 font-weight-bold text-gray-800">{{ item['description'] or ''}}</div>
+                <div class="text-s mb-0 text-gray-600">{{ item['notes'] or ''}}</div>
                 <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['link'] or ''}}</div>
                 <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['map-link'] or ''}}</div>
+            </button>
+        </form>
+        {% endfor %}
+    </div>
+</div>
+<!-- Card Body -->
+<div class="col card-body h-100 no-gutters align-items-center">
+    <div class="row">
+        <div class="card shadow">
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% else %}
+<div class="col">
+    <!-- Dropdown Card Example -->
+    <div class="card shadow mb-2">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                    aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">Move up</a></li>
+                    <li><a class="dropdown-item" href="#">Move down</a></li>
+                    <li><a class="dropdown-item" href="#">Complete</a></li>
+                    <li><a class="dropdown-item" href="#">Complete</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            Nothing here yet. Add your ideas below!
+        </div>
+        <div class="card border-left-success shadow p-2 m-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <form action="/idea-add" method="post">
+                            <input type="hidden" type="text" id="day" name="day" value="1">
+                            <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest['id'] }}">
+                            <div class="mb-2">
+                                <label for="description" class="form-label text-black">Description</label>
+                                <input autofocus class="form-control w-100" id="description" name="description"
+                                    placeholder="Describe idea/place" type="text">
+                            </div>
+                            <div class="mb-2">
+                                <label for="notes" class="form-label text-black">Notes</label>
+                                <input class="form-control w-100" id="notes" name="notes" placeholder="Notes (optional)"
+                                    type="text">
+                            </div>
+                            <div class="mb-2">
+                                <label for="link" class="form-label text-black">Link</label>
+                                <input class="form-control w-100" id="link" name="link"
+                                    placeholder="Paste a link to a webpage or google for this idea" type="text">
+                            </div>
+                            <button class="btn btn-primary my-2" type="submit">Add</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    {% endfor %}
-    {% else %}
-    <div class="col">
-        <!-- Dropdown Card Example -->
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Move up</a></li>
-                        <li><a class="dropdown-item" href="#">Move down</a></li>
-                        <li><a class="dropdown-item" href="#">Complete</a></li>
-                        <li><a class="dropdown-item" href="#">Complete</a></li>
-                    </ul>
+</div>
+{% endfor %}
+<div class="col">
+    <!-- Card-button for adding a day -->
+    <a href="#" class="btn btn-light btn-lg card border-left-primary shadow h-100 my-2 justify-content-start">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center justify-content-start">
+                <div class="col-2 h-auto align-items-center mr-4">
+                    <div class="row h1 font-weight-bold text-primary text-capitalize mb-1">
+                        <div class="text-xl-left fa-solid fa-plus fa-l"></div>
+                    </div>
                 </div>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                Nothing here yet. Add your ideas below!
-            </div>
-            <div class="card border-left-success shadow p-2 m-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <form action="/idea-add" method="post">
-                                <input type="hidden" type="text" id="day" name="day" value="1">
-                                <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest['id'] }}">
-                                <div class="mb-2">
-                                    <label for="description" class="form-label text-black">Description</label>
-                                    <input autofocus class="form-control w-100" id="description" name="description"
-                                        placeholder="Describe idea/place" type="text">
-                                </div>
-                                <div class="mb-2">
-                                    <label for="notes" class="form-label text-black">Notes</label>
-                                    <input class="form-control w-100" id="notes" name="notes"
-                                        placeholder="Notes (optional)" type="text">
-                                </div>
-                                <div class="mb-2">
-                                    <label for="link" class="form-label text-black">Link</label>
-                                    <input class="form-control w-100" id="link" name="link"
-                                        placeholder="Paste a link to a webpage or google for this idea" type="text">
-                                </div>
-                                <button class="btn btn-primary my-2" type="submit">Add</button>
-                            </form>
-                        </div>
+                <div class="col-3 h-auto align-items-center">
+                    <div class="row text-md-left mb-0 mt-0 font-weight-bold text-gray-600">Add a day to your plans
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
-    <div class="col">
-        <!-- Card-button for adding a day -->
-        <a href="#" class="btn btn-light btn-lg card border-left-primary shadow h-100 py-2 justify-content-start">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center justify-content-start">
-                    <div class="col-2 h-auto align-items-center mr-4">
-                        <div class="row h1 font-weight-bold text-primary text-capitalize mb-1">
-                            <div class="text-xl-left fa-solid fa-plus fa-l"></div>
-                        </div>
-                    </div>
-                    <div class="col-3 h-auto align-items-center">
-                        <div class="row text-md-left mb-0 mt-0 font-weight-bold text-gray-600">Add a day to your plans
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
+    </a>
+</div>
 </div>
 {% endblock %}
