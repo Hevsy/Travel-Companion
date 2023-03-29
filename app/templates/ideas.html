@@ -15,7 +15,7 @@ Ideas
         <h2 class="h4 mb-1 text-gray-600">{{ dest['year'] or ''}}</h1>
             <p class="mb-4">A place to store your places of interest, ideas, links</p>
 </div>
-<div class="col-xl col-md-6 mb-4">
+<div class="col-md-6 mb-4 col-xl-auto">
     {% for day, group in data | groupby('day') %}
     <!-- Card showing a destination -->
     <div class="card shadow">
@@ -50,28 +50,27 @@ Ideas
             </div>
         </div>
         <!-- Card Body -->
-        {% for item in group %}
-        <form action="#" href="#" method="post">
-            <input type="hidden" type="text" id="id" name="id" value="{{ day }}">
-            <button class="col-xl card-body btn2 btn-light h-100 no-gutters align-items-center align-middle"
-                type="submit">
-                <div class="text-s mb-0 font-weight-bold text-gray-800">{{ item['description'] or ''}}</div>
-                <div class="text-s mb-0 text-gray-600">{{ item['notes'] or ''}}</div>
-                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['link'] or ''}}</div>
-                <div class="text-s mb-0 font-weight-bold text-gray-600">{{ item['map-link'] or ''}}</div>
-            </button>
-        </form>
-        {% endfor %}
-    </div>
-</div>
-<!-- Card Body -->
-<div class="col card-body h-100 no-gutters align-items-center">
-    <div class="row">
-        <div class="card shadow">
+        <div class="col-xl h-100 no-gutters align-items-center">
+            <div class="card-body">
+                {% for item in group %}
+                <div>
+                    <button class="card shadow-sm btn2 btn-light h-100 no-gutters align-items-center align-middle">
+                        <div class="row h-100">
+                            <div class="col-auto mb-0 font-weight-bold text-gray-800">{{ item['description'] or ''}}
+                            </div>
+                            <div class="col-auto text-s mb-0 text-gray-600">{{ item['notes'] or ''}}</div>
+                            <a class="col-auto text-s mb-0 font-weight-bold text-blue" href="{{ item['link'] or ''}}"
+                                target="_blank" rel="noopener noreferrer">Link</a>
+                            <div class="col-auto text-s mb-0 font-weight-bold text-gray-600">{{ item['map-link'] or
+                                ''}}
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
-</div>
-</div>
 </div>
 {% else %}
 <div class="col">
@@ -146,6 +145,5 @@ Ideas
             </div>
         </div>
     </a>
-</div>
 </div>
 {% endblock %}
