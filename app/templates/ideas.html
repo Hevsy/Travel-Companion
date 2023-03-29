@@ -15,7 +15,7 @@ Ideas
         <h2 class="h4 mb-1 text-gray-600">{{ dest['year'] or ''}}</h1>
             <p class="mb-4">A place to store your places of interest, ideas, links</p>
 </div>
-<div class="col-md-6 mb-4 col-xl-auto">
+<div class="col">
     {% for day, group in data | groupby('day') %}
     <!-- Card showing a destination -->
     <div class="card shadow">
@@ -50,25 +50,45 @@ Ideas
             </div>
         </div>
         <!-- Card Body -->
-        <div class="col-xl h-100 no-gutters align-items-center">
+        <div class="h-100 no-gutters align-items-center">
             <div class="card-body">
                 {% for item in group %}
-                <div>
-                    <button class="card shadow-sm btn2 btn-light h-100 no-gutters align-items-center align-middle">
-                        <div class="row h-100">
-                            <div class="col-auto mb-0 font-weight-bold text-gray-800">{{ item['description'] or ''}}
-                            </div>
-                            <div class="col-auto text-s mb-0 text-gray-600">{{ item['notes'] or ''}}</div>
-                            <a class="col-auto text-s mb-0 font-weight-bold text-blue" href="{{ item['link'] or ''}}"
-                                target="_blank" rel="noopener noreferrer">Link</a>
-                            <div class="col-auto text-s mb-0 font-weight-bold text-gray-600">{{ item['map-link'] or
-                                ''}}
+                <div
+                    class="card shadow-sm btn2 btn-light h-100 no-gutters align-items-md-stretch align-content-start m-1 p-1">
+                    <div class="row ">
+                        <div class="col mb-1 font-weight-bold text-gray-800">{{ item['description'] or ''}}
+                        </div>
+                        <div class="col mb-1 text-s text-gray-600">{{ item['notes'] or ''}}</div>
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <a class=" text-s font-weight-bold text-blue" href="{{ item['link'] or ''}}"
+                                    target="_blank" rel="noopener noreferrer">Link</a>
                             </div>
                         </div>
-                    </button>
+                        <div class="col mb-1text-s font-weight-bold text-gray-600">{{ item['map-link'] or
+                            ''}}
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
+                <a href="#"
+                    class="btn btn-light btn-lg card border-left-primary shadow h-100 my-0 p-0 justify-content-start">
+                    <div class="card-body p-1">
+                        <div class="row no-gutters align-items-center justify-content-start">
+                            <div class="col-2 h-auto align-items-center mr-4">
+                                <div class="row h1 font-weight-bold text-primary text-capitalize mb-1">
+                                    <div class="text-md-left fa-solid fa-plus fa-sm"></div>
+                                </div>
+                            </div>
+                            <div class="col-3 h-auto align-items-center">
+                                <div class="row mb-0 mt-0 text-gray-800">
+                                    Add an idea
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-            {% endfor %}
         </div>
     </div>
 </div>
