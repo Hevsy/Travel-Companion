@@ -19,3 +19,7 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+def strip_args(args1):
+    """Strips args from empty arguments"""
+    return {f: b for f, b in args1.items() if b}

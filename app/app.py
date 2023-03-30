@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
 
 from .etc.db_init import db_init
-from .etc.functions import apology, login_required
+from .etc.functions import apology, login_required, strip_args
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -220,7 +220,7 @@ def dest_add():
         # Check for required input - name must be provided
         if not args1["name"]:
             return apology("Must provide name", 403)
-        args = {k: v for k, v in args1.items() if v}
+        args = strip_args(args1)
         with engine.begin() as db:
             db.execute(insert(destinations_table).values(args))  # type: ignore
             db.commit()
@@ -263,7 +263,7 @@ def dest_edit():
             }
             if not args1["name"]:
                 return apology("Must provide name", 403)
-            args = {k: v for k, v in args1.items() if v}
+            args = strip_args(args1)
             with engine.begin() as db:
                 db.execute(
                     update(destinations_table)
@@ -365,7 +365,7 @@ def idea_add():
         # Check for required input - description must be provided
         if not args1["description"]:
             return apology("Must provide description", 403)
-        args = {k: v for k, v in args1.items() if v}
+        args = strip_args(args1)
         with engine.begin() as db:
             db.execute(insert(ideas_table).values(args))  # type: ignore
             db.commit()

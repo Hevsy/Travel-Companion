@@ -54,33 +54,35 @@ Ideas
             <div class="card-body">
                 {% for item in group %}
                 <div
-                    class="card shadow-sm btn2 btn-light h-100 no-gutters align-items-md-stretch align-content-start m-1 p-1">
+                    class="card shadow-sm btn2 btn-light h-100 no-gutters align-content-start m-1 p-1">
                     <div class="row ">
                         <div class="col mb-1 font-weight-bold text-gray-800">{{ item['description'] or ''}}
                         </div>
-                        <div class="col mb-1 text-s text-gray-600">{{ item['notes'] or ''}}</div>
+                        <div class="col mb-1 small text-gray-600">{{ item['notes'] or ''}}</div>
+                        {% if item['link'] %}
                         <div class="col">
                             <div class="card shadow-sm">
-                                <a class=" text-s font-weight-bold text-blue" href="{{ item['link'] or ''}}"
-                                    target="_blank" rel="noopener noreferrer">Link</a>
+                                <a class=" small font-weight-bold text-blue" href="{{ item['link'] }}" target="_blank"
+                                    rel="noopener noreferrer">Link</a>
                             </div>
                         </div>
-                        <div class="col mb-1text-s font-weight-bold text-gray-600">{{ item['map-link'] or
-                            ''}}
+                        {% endif %}
+                        {% if item['map-link'] %}
+                        <div class="col mb-1 small font-weight-bold text-gray-600">{{ item['map-link'] }}
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
-                <a href="#"
-                    class="btn btn-light btn-lg card border-left-primary shadow h-100 my-0 p-0 justify-content-start">
-                    <div class="card-body p-1">
+                <a href="#" class="btn btn-light btn-sm card border-left-primary shadow my-1 mx-1 p-1 justify-content-start">
+                    <div class="card-body p-0">
                         <div class="row no-gutters align-items-center justify-content-start">
-                            <div class="col-2 h-auto align-items-center mr-4">
+                            <div class="col-auto align-items-center mr-4 mx-2">
                                 <div class="row h1 font-weight-bold text-primary text-capitalize mb-1">
-                                    <div class="text-md-left fa-solid fa-plus fa-sm"></div>
+                                    <div class="fa-solid fa-plus fa-2xs"></div>
                                 </div>
                             </div>
-                            <div class="col-3 h-auto align-items-center">
+                            <div class="col-auto align-items-center">
                                 <div class="row mb-0 mt-0 text-gray-800">
                                     Add an idea
                                 </div>
