@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
 
 from .etc.db_init import db_init
-from .etc.functions import apology, login_required, strip_args
+from .etc.functions import apology, check_if_username_exists, login_required, register_user, strip_args
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -70,33 +70,21 @@ def register():
         print(username, password, confirmation)
         # Check if username already exists
         with engine.begin() as db:
-            if check_if_username_exists(db, username):
+            if check_if_username_exists(db, username, users_table):
                 return apology("Username already exists")
             else:
-                register_user(username, password, db)
+                register_user(username, password, db, users_table)
 
                 # Remember which user has registered and log they in
-                session["user_id"] = db.execute(
+                u_id = db.execute(
                     select(users_table.c["id"]).where(
                         users_table.c.username == username
                     )
                 ).all()[0][0]
-                return redirect("/login")
 
+                session["user_id"] = u_id
+                return redirect("/")
 
-def register_user(username, password, db):
-    """Add user to DB"""
-    hash = generate_password_hash(password)
-    db.execute(insert(table=users_table).values(username=username, hash=hash))
-    db.commit()
-
-
-def check_if_username_exists(db, username):
-    """Check is username already exists in DB"""
-    result = db.execute(
-        select(users_table.c.id).where(users_table.c.username == username)
-    ).all()
-    return len(result) > 0
 
 
 @app.route("/login", methods=["GET", "POST"])

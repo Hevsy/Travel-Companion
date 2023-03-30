@@ -27,7 +27,7 @@ def db_init():
     if not database_exists(engine.url):
         create_database(engine.url)
 
-    # DB Metadata for ORM
+    # DB Metadata
     # Create metadata object
     meta = MetaData()
     # Define tables
