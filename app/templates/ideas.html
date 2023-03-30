@@ -54,7 +54,7 @@ Ideas
             <div class="card-body">
                 {% for item in group %}
                 <div class="card shadow-sm btn2 btn-light no-gutters align-content-start m-1 p-1">
-                    <div class="row ">
+                    <div class="row align-items-center">
                         <div class="col my-1 font-weight-bold text-gray-800">{{ item['description'] or ''}}
                         </div>
                         <div class="col my-1 small text-gray-600">{{ item['notes'] or ''}}</div>
@@ -74,14 +74,14 @@ Ideas
                 </div>
                 {% endfor %}
                 <div class="col">
-                    <div class="row">
+                    <div class="row align-items-center">
                         <a href="#"
-                            class="btn col-auto btn-light btn-sm card border-left-primary shadow my-1 mx-1 p-1 align-self-start">
+                            class="btn col-auto btn-light btn-sm card border-left-success shadow my-1 mx-1 p-1 align-self-start">
                             <div class="card-body py-1 pl-1">
                                 <div class="row no-gutters align-items-center justify-content-start">
                                     <div class="col-auto align-items-center mr-4 mx-2">
                                         <div class="row h1 font-weight-bold text-primary text-capitalize mb-1">
-                                            <div class="fa-solid fa-plus fa-2xs"></div>
+                                            <div class="text-success fa-solid fa-plus fa-2xs"></div>
                                         </div>
                                     </div>
                                     <div class="col-auto align-self-start">
@@ -157,14 +157,14 @@ Ideas
 <div class="col">
     <!-- Card-button for adding a day -->
     <a href="#" class="btn btn-light btn-lg card border-left-primary shadow my-3 justify-content-start p-0">
-        <div class="card-body p-1">
-            <div class="row no-gutters align-items-center justify-content-start align-self-start">
+        <div class="card-body p-0 align-items-center">
+            <div class="row no-gutters align-items-center justify-content-start align-self-start p-0">
                 <div class="col-1 align-items-center mr-0 p-0">
                     <div class="row p-0 h1 font-weight-bold text-primary text-capitalize mb-1">
                         <div class="p-1 text-xl-left fa-solid fa-plus fa-l"></div>
                     </div>
                 </div>
-                <div class="col h6 align-items-center justify-content-start p-1">
+                <div class="col h6 align-items-center justify-content-start p-1 m-0">
                     <div class="row ml-0 text-md-left m-0 p-0 font-weight-bold align-self-center text-gray-600">Add a day to your plans
                     </div>
                 </div>
