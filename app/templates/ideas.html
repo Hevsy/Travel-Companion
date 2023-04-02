@@ -100,19 +100,19 @@ Ideas
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="LabelDeleteModal">Add a new idea below</h5>
-                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">x</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="card border-left-success shadow p-2 m-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <form action="/idea-add" method="post">
+                <form action="/idea-add" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="LabelDeleteModal">Add a new idea below</h5>
+                        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="card shadow p-2 m-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
                                     <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
                                     <input type="hidden" type="text" id="dest_id" name="dest_id"
                                         value="{{ dest['id'] }}">
@@ -131,17 +131,17 @@ Ideas
                                         <input class="form-control w-100" id="link" name="link"
                                             placeholder="Paste a link to a webpage or google for this idea" type="text">
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button class="btn btn-primary" type="submit">Add</button>
-                </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary" type="submit">Add</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -171,7 +171,7 @@ Ideas
             <div class="card-body">
                 Nothing here yet. Add your ideas below!
             </div>
-            <div class="card border-left-success shadow p-2 m-2">
+            <div class="card border-left-secondary shadow p-2 m-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
