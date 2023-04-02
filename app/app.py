@@ -354,6 +354,7 @@ def idea_add():
         # Check for required input - description must be provided
         if not args1["description"]:
             return apology("Must provide description", 403)
+        # Remove empty arguments and insert data into db
         args = strip_args(args1)
         with engine.begin() as db:
             db.execute(insert(ideas_table).values(args))  # type: ignore
