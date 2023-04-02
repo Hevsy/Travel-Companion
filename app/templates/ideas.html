@@ -16,7 +16,7 @@ Ideas
             <p class="mb-4">A place to store your places of interest, ideas, links</p>
 </div>
 <div class="col">
-    {% for day, group in data | groupby('day') %}
+    {% for day in range(1, dest['days'] + 1) %}
     <!-- Card showing a destination -->
     <div class="card shadow">
         <!-- Card Header - Dropdown -->
@@ -31,18 +31,18 @@ Ideas
                     aria-labelledby="dropdownMenuLink">
                     <div class="dropdown-header text-l text-gray-600">Day:</div>
                     <form action="#" method="post" role="form">
-                        <input type="hidden" type="text" id="id" name="id" value="day">
+                        <input type="hidden" type="text" id="id" name="id" value="{{ day }}">
                         <button class="dropdown-item" type="submit">
-                            <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
-                            Edit
+                            <i class="fa-solid fa-arrow-up fa-sm text-gray-600"></i>
+                            Move up
                         </button>
                     </form>
                     <a class="dropdown-item" href="#">
-                        <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
-                        Mark as complete
+                        <i class="fa-solid fa-arrow-down fa-sm text-gray-600"></i>
+                        Move down
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ day }}">
+                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteDayModal{{ day }}">
                         <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
                         Delete
                     </a>
@@ -52,7 +52,7 @@ Ideas
         <!-- Card Body -->
         <div class="h-100 no-gutters align-items-center">
             <div class="card-body">
-                {% for item in group %}
+                {% for item in data if item['day'] == day %}
                 <div class="card shadow-sm no-gutters align-content-start m-1 p-1">
                     <div class="row align-items-center">
                         <div class="col my-1 pl-4 font-weight-bold text-gray-800">{{ item['description'] or ''}}
@@ -110,10 +110,26 @@ Ideas
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                     aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="#">Move up</a></li>
-                    <li><a class="dropdown-item" href="#">Move down</a></li>
-                    <li><a class="dropdown-item" href="#">Complete</a></li>
-                    <li><a class="dropdown-item" href="#">Delete</a></li>
+                    <div class="dropdown-header text-l text-gray-600">Day:</div>
+                    <li>
+                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fa-solid fa-arrow-up fa-sm text-gray-800"></i>
+                            Move up
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fa-solid fa-arrow-down fa-sm text-gray-800"></i>
+                            Move down
+                        </a>
+                    </li>
+                    <div class="dropdown-divider"></div>
+                    <li>
+                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fa-solid fa-trash fa-sm text-gray-800"></i>
+                            Delete
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

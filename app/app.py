@@ -321,6 +321,7 @@ def ideas():
                     destinations_table.c.country,
                     destinations_table.c.year,
                     destinations_table.c.id,
+                    destinations_table.c.days
                 ).where(
                     and_(
                         destinations_table.c.user_id == session["user_id"],

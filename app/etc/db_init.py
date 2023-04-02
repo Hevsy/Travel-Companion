@@ -46,6 +46,7 @@ def db_init():
         Column("name", String(60)),
         Column("country", String(60)),
         Column("year", Integer),
+        Column("days", Integer, default=1, nullable=False),
         Column("completed", Boolean),
     )
 
