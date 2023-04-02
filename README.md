@@ -13,8 +13,7 @@ The idea is to run the app on AWS, so I also took time to study Cloudformation (
 To help shifting between single-machine development and tests/production in the cloud, I put all DB configuration in the external files. The database connection config is stored in etc/config.py and db initialisation script resides in db_init.py.
 To have a cleaner main body, I'll put as much functions/objects separately in functions.py and import them to main, where practical.
 
-Recources used:
-/vendor/jquery
+
 
 
 

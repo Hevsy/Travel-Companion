@@ -53,21 +53,21 @@ Ideas
         <div class="h-100 no-gutters align-items-center">
             <div class="card-body">
                 {% for item in group %}
-                <div class="card shadow-sm btn2 btn-light no-gutters align-content-start m-1 p-1">
+                <div class="card shadow-sm no-gutters align-content-start m-1 p-1">
                     <div class="row align-items-center">
-                        <div class="col my-1 font-weight-bold text-gray-800">{{ item['description'] or ''}}
+                        <div class="col my-1 pl-4 font-weight-bold text-gray-800">{{ item['description'] or ''}}
                         </div>
                         <div class="col my-1 small text-gray-600">{{ item['notes'] or ''}}</div>
                         {% if item['link'] %}
                         <div class="col">
-                            <div class="card shadow-sm">
-                                <a class=" small font-weight-bold text-blue" href="{{ item['link'] }}" target="_blank"
-                                    rel="noopener noreferrer">Link</a>
-                            </div>
+                            <a class="btn btn-primary btn-sm shadow-sm font-weight-bold" href="{{ item['link'] }}"
+                                target="_blank" rel="noopener noreferrer">Link</a>
                         </div>
                         {% endif %}
                         {% if item['map-link'] %}
-                        <div class="col mb-1 small font-weight-bold text-gray-600">{{ item['map-link'] }}
+                        <div class="col">
+                            <a class="btn btn-secondary btn-sm shadow-sm font-weight-bold" href="{{ item['map-link'] }}"
+                                target="_blank" rel="noopener noreferrer">Map</a>
                         </div>
                         {% endif %}
                     </div>
@@ -113,7 +113,7 @@ Ideas
                     <li><a class="dropdown-item" href="#">Move up</a></li>
                     <li><a class="dropdown-item" href="#">Move down</a></li>
                     <li><a class="dropdown-item" href="#">Complete</a></li>
-                    <li><a class="dropdown-item" href="#">Complete</a></li>
+                    <li><a class="dropdown-item" href="#">Delete</a></li>
                 </ul>
             </div>
         </div>
@@ -159,7 +159,7 @@ Ideas
             <div class="row no-gutters align-items-center justify-content-start align-self-start p-0">
                 <div class="col-1 align-items-center mr-0 p-0">
                     <div class="row p-0 h1 font-weight-bold text-primary text-capitalize mb-1">
-                        <div class="p-1 text-xl-left fa-solid fa-plus fa-l"></div>
+                        <div class="p-1 fa-solid fa-plus fa-l"></div>
                     </div>
                 </div>
                 <div class="col h6 align-items-center justify-content-start p-1 m-0">
