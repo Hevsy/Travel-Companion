@@ -360,5 +360,31 @@ def idea_delete():
         return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
 
 
+@app.route("/day_add")
+@login_required
+def day_add():
+    """Adding a day to a destination"""
+    if request.method == ["POST"]:
+        user_id = session["user_id"]
+        dest_id = request.form.get("dest_id")
+        with engine.begin() as db:
+            days = int(db.execute(
+                select(destinations_table.c.days).where(
+                    and_(
+                        ideas_table.c.user_id == user_id,
+                        ideas_table.c.dest_id == dest_id,
+                    )
+                )
+            ).all()[0][0])
+            db.execute(
+                update(destinations_table)
+                .where(destinations_table.c.id == dest_id)
+                .values(days=days + 1)
+            )
+            return redirect("/dest")
+    else:
+        return apology("Method not allowed", 403)
+
+
 if __name__ == "__main__":
     app.run()
