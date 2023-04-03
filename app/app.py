@@ -1,4 +1,3 @@
-from cmath import log
 from flask import Flask, redirect, render_template, request, session
 from sqlalchemy import and_, delete, insert, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -9,6 +8,7 @@ from .etc.db_init import db_init
 from .etc.functions import (
     apology,
     check_if_username_exists,
+    get_dest_by_id,
     get_ideas,
     login_required,
     register_user,
@@ -83,13 +83,13 @@ def register():
                 register_user(username, password, db, users_table)
 
                 # Remember which user has registered and log they in
-                u_id = db.execute(
+                user_id = db.execute(
                     select(users_table.c["id"]).where(
                         users_table.c.username == username
                     )
                 ).all()[0][0]
 
-                session["user_id"] = u_id
+                session["user_id"] = user_id
                 return redirect("/")
 
 
@@ -136,10 +136,8 @@ def login():
 @app.route("/logout")
 def logout():
     """Log user out"""
-
     # Forget any user_id
     session.clear()
-
     # Redirect user to login form
     return redirect("/")
 
@@ -205,16 +203,15 @@ def dest_add():
         return render_template("dest-add.html")
     else:
         # Create a list of arguments for SQLALchemy
-        args1 = {
+        args = {
             "user_id": session["user_id"],
             "name": request.form.get("name"),
             "country": request.form.get("country"),
             "year": request.form.get("year"),
         }
         # Check for required input - name must be provided
-        if not args1["name"]:
+        if not args["name"]:
             return apology("Must provide name", 403)
-        args = strip_args(args1)
         with engine.begin() as db:
             db.execute(insert(destinations_table).values(args))  # type: ignore
             db.commit()
@@ -231,39 +228,27 @@ def dest_edit():
     else:
         action = request.form.get("action")
         dest_id = str(request.form.get("id"))
+        user_id = session["user_id"]
         if action == "call":
             with engine.begin() as db:
-                data = db.execute(
-                    select(
-                        destinations_table.c.id,
-                        destinations_table.c.name,
-                        destinations_table.c.country,
-                        destinations_table.c.year,
-                        destinations_table.c.completed,
-                    ).where(
-                        and_(
-                            destinations_table.c.user_id == session["user_id"],
-                            destinations_table.c.id == dest_id,
-                        )
-                    )
-                ).all()[0]
-                return render_template("dest-edit.html", data=data)
+                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+                return render_template("dest-edit.html", data=dest_data)
         elif action == "edit":
             # Create a list of arguments for SQLALchemy
-            args1 = {
+            args = {
                 "name": request.form.get("name"),
                 "country": request.form.get("country"),
                 "year": request.form.get("year"),
             }
-            if not args1["name"]:
+            if not args["name"]:
                 return apology("Must provide name", 403)
-            args = strip_args(args1)
+            args = strip_args(args)
             with engine.begin() as db:
                 db.execute(
                     update(destinations_table)
                     .where(
                         and_(
-                            destinations_table.c.user_id == session["user_id"],
+                            destinations_table.c.user_id == user_id,
                             destinations_table.c.id == dest_id,
                         )
                     )
@@ -306,9 +291,8 @@ def ideas():
         dest_id = request.form.get("id")
         with engine.begin() as db:
             # Get all the ideas for the current destination and pass to the template
-            ideas_data, dest_data = get_ideas(
-                dest_id, db, user_id, ideas_table, destinations_table
-            )
+            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
             return render_template(
                 "ideas.html", ideas_data=ideas_data, dest_data=dest_data
             )
@@ -325,7 +309,7 @@ def idea_add():
         # Create a list of arguments for SQLALchemy
         dest_id = request.form.get("dest_id")
         user_id = session["user_id"]
-        args1 = {
+        args = {
             "user_id": user_id,
             "dest_id": dest_id,
             "description": request.form.get("description"),
@@ -336,17 +320,16 @@ def idea_add():
             "completed": False,
         }
         # Check for required input - description must be provided
-        if not args1["description"]:
+        if not args["description"]:
             return apology("Must provide description", 403)
         # Remove empty arguments and insert data into db
-        args = strip_args(args1)
+        args = strip_args(args)
         with engine.begin() as db:
             # Add the idea to the db
             db.execute(insert(ideas_table).values(args))  # type: ignore
             # Get all the ideas for the current destination and pass to the template
-            ideas_data, dest_data = get_ideas(
-                dest_id, db, user_id, ideas_table, destinations_table
-            )
+            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
             return render_template(
                 "ideas.html", ideas_data=ideas_data, dest_data=dest_data
             )
@@ -372,9 +355,8 @@ def idea_delete():
             )
         )
         # Get all the ideas for the current destination and pass to the template
-        ideas_data, dest_data = get_ideas(
-            dest_id, db, user_id, ideas_table, destinations_table
-        )
+        ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+        dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
         return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
 
 

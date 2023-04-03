@@ -25,9 +25,9 @@ def login_required(f):
     return decorated_function
 
 
-def strip_args(args1):
+def strip_args(args):
     """Strips dictionary arguments from empty arguments"""
-    return {key: value for key, value in args1.items() if value}
+    return {key: value for key, value in args.items() if value}
 
 
 def register_user(username, password, db, users_table):
@@ -44,8 +44,8 @@ def check_if_username_exists(db, username, users_table):
     return len(result) > 0
 
 
-def get_ideas(dest_id, db, user_id, ideas_table, destinations_table):
-    """Returns all ideas for specified dest_id plus data about that destination required for ideas templates"""
+def get_ideas(dest_id, db, user_id, ideas_table):
+    """Returns all ideas for specified dest_id"""
     ideas = db.execute(
         select(
             ideas_table.c.id,
@@ -61,7 +61,11 @@ def get_ideas(dest_id, db, user_id, ideas_table, destinations_table):
             )
         )
     ).all()
-    # Get all the destination's data to show in the template as well
+    return ideas
+
+def get_dest_by_id(dest_id, db, user_id, destinations_table):
+    """Returns all ideas for specified dest_id plus data about that destination required for ideas templates"""
+    # Get the destination's data bi its id to show in the template
     dest = db.execute(
         select(
             destinations_table.c.name,
@@ -69,6 +73,7 @@ def get_ideas(dest_id, db, user_id, ideas_table, destinations_table):
             destinations_table.c.year,
             destinations_table.c.id,
             destinations_table.c.days,
+            destinations_table.c.completed
         ).where(
             and_(
                 destinations_table.c.user_id == user_id,
@@ -76,4 +81,4 @@ def get_ideas(dest_id, db, user_id, ideas_table, destinations_table):
             )
         )
     ).all()[0]
-    return ideas, dest
+    return dest
