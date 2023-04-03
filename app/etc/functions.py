@@ -53,11 +53,11 @@ def get_ideas(dest_id, db, user_id, ideas_table):
             ideas_table.c.notes,
             ideas_table.c.link,
             ideas_table.c.map_link,
-            ideas_table.c.day,
+            ideas_table.c.day
         ).where(
             and_(
                 ideas_table.c.user_id == user_id,
-                ideas_table.c.dest_id == dest_id,
+                ideas_table.c.dest_id == dest_id
             )
         )
     ).all()
