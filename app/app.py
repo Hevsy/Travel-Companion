@@ -323,9 +323,11 @@ def idea_add():
         return redirect("/dest")
     else:
         # Create a list of arguments for SQLALchemy
+        dest_id = request.form.get("dest_id")
+        user_id = session["user_id"]
         args1 = {
-            "user_id": session["user_id"],
-            "dest_id": request.form.get("dest_id"),
+            "user_id": user_id,
+            "dest_id": dest_id,
             "description": request.form.get("description"),
             "notes": request.form.get("notes"),
             "link": request.form.get("link"),
@@ -339,9 +341,15 @@ def idea_add():
         # Remove empty arguments and insert data into db
         args = strip_args(args1)
         with engine.begin() as db:
+            # Add the idea to the db
             db.execute(insert(ideas_table).values(args))  # type: ignore
-            db.commit()
-        return redirect("/ideas")
+            # Get all the ideas for the current destination and pass to the template
+            ideas_data, dest_data = get_ideas(
+                dest_id, db, user_id, ideas_table, destinations_table
+            )
+            return render_template(
+                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+            )
 
 
 @app.route("/idea_delete", methods=["POST"])
