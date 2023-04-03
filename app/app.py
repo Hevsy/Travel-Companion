@@ -6,7 +6,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
 
 from .etc.db_init import db_init
-from .etc.functions import apology, check_if_username_exists, login_required, register_user, strip_args
+from .etc.functions import (
+    apology,
+    check_if_username_exists,
+    get_ideas,
+    login_required,
+    register_user,
+    strip_args,
+)
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -84,7 +91,6 @@ def register():
 
                 session["user_id"] = u_id
                 return redirect("/")
-
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -296,40 +302,16 @@ def ideas():
     if request.method == "GET":
         return redirect("/dest")
     else:
+        user_id = session["user_id"]
         dest_id = request.form.get("id")
         with engine.begin() as db:
             # Get all the ideas for the current destination and pass to the template
-            data = db.execute(
-                select(
-                    ideas_table.c.id,
-                    ideas_table.c.description,
-                    ideas_table.c.notes,
-                    ideas_table.c.link,
-                    ideas_table.c.map_link,
-                    ideas_table.c.day,
-                ).where(
-                    and_(
-                        ideas_table.c.user_id == session["user_id"],
-                        ideas_table.c.dest_id == dest_id,
-                    )
-                )
-            ).all()
-            # Get all the destination's data to show in the template as well
-            dest = db.execute(
-                select(
-                    destinations_table.c.name,
-                    destinations_table.c.country,
-                    destinations_table.c.year,
-                    destinations_table.c.id,
-                    destinations_table.c.days
-                ).where(
-                    and_(
-                        destinations_table.c.user_id == session["user_id"],
-                        destinations_table.c.id == dest_id,
-                    )
-                )
-            ).all()[0]
-            return render_template("ideas.html", data=data, dest=dest)
+            ideas_data, dest_data = get_ideas(
+                dest_id, db, user_id, ideas_table, destinations_table
+            )
+            return render_template(
+                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+            )
 
 
 @app.route("/idea-add", methods=["GET", "POST"])
@@ -361,26 +343,31 @@ def idea_add():
             db.commit()
         return redirect("/ideas")
 
+
 @app.route("/idea_delete", methods=["POST"])
 @login_required
 def idea_delete():
     """Deleting an idea from db"""
-    used_id = session["user_id"]
+    user_id = session["user_id"]
     dest_id = request.form.get("dest_id")
     id = request.form.get("id")
-    if not dest_id or not id: 
+    if not dest_id or not id:
         return apology("Invalid input", 400)
     with engine.begin() as db:
         db.execute(
             delete(ideas_table).where(
                 and_(
-                    ideas_table.c.user_id == used_id,
+                    ideas_table.c.user_id == user_id,
                     ideas_table.c.dest_id == dest_id,
-                    ideas_table.c.id == id
+                    ideas_table.c.id == id,
                 )
             )
         )
-    return 
+        # Get all the ideas for the current destination and pass to the template
+        ideas_data, dest_data = get_ideas(
+            dest_id, db, user_id, ideas_table, destinations_table
+        )
+        return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
 
 
 if __name__ == "__main__":

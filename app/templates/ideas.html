@@ -5,69 +5,72 @@ Ideas
 {% endblock %}
 
 {% block title2 %}
-{{ dest['name'] }} {{ dest['year'] or ''}}
+{{ dest_data['name'] }} {{ dest_data['year'] or ''}}
 {% endblock %}
 
 {% block main %}
 <div>
-    <h1 class="h3 mb-1 text-gray-800 font-weight-bold">{{ dest['name'] }}</h1>
-    <h2 class="h4 mb-1 text-gray-600">{{ dest['country'] or ''}}</h1>
-        <h2 class="h4 mb-1 text-gray-600">{{ dest['year'] or ''}}</h1>
+    <h1 class="h3 mb-1 text-gray-800 font-weight-bold">{{ dest_data['name'] }}</h1>
+    <h2 class="h4 mb-1 text-gray-600">{{ dest_data['country'] or ''}}</h1>
+        <h2 class="h4 mb-1 text-gray-600">{{ dest_data['year'] or ''}}</h1>
             <p class="mb-4">A place to store your places of interest, ideas, links</p>
 </div>
 <div class="col">
-    {% for day, group in data | groupby('day') %}
+    {% for day in range(1, dest_data['days'] + 1) %}
     <!-- Card showing a destination -->
     <div class="card shadow">
         <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Day {{ day }}</h6>
+        <div class="card-header py-3 d-flex flex-row justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
             <div class="dropdown no-arrow">
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-600"></i>
+                    aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                     aria-labelledby="dropdownMenuLink">
                     <div class="dropdown-header text-l text-gray-600">Day:</div>
-                    <form action="#" method="post" role="form">
-                        <input type="hidden" type="text" id="id" name="id" value="day">
-                        <button class="dropdown-item" type="submit">
-                            <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
-                            Edit
-                        </button>
-                    </form>
-                    <a class="dropdown-item" href="#">
-                        <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
-                        Mark as complete
-                    </a>
+                    <li>
+                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fa-solid fa-arrow-up fa-sm text-gray-800"></i>
+                            Move up
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fa-solid fa-arrow-down fa-sm text-gray-800"></i>
+                            Move down
+                        </a>
+                    </li>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ day }}">
-                        <i class="fa-solid fa-trash fa-sm text-gray-600"></i>
-                        Delete
-                    </a>
-                </div>
+                    <li>
+                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fa-solid fa-trash fa-sm text-gray-800"></i>
+                            Delete
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
         <!-- Card Body -->
         <div class="h-100 no-gutters align-items-center">
             <div class="card-body">
-                {% for item in group %}
-                <div class="card shadow-sm btn2 btn-light no-gutters align-content-start m-1 p-1">
+                {% for idea in ideas_data if idea['day'] == day %}
+                <div class="card shadow-sm no-gutters align-content-start m-1 p-1">
                     <div class="row align-items-center">
-                        <div class="col my-1 font-weight-bold text-gray-800">{{ item['description'] or ''}}
+                        <div class="col my-1 pl-4 font-weight-bold text-gray-800">{{ idea['description'] or ''}}
                         </div>
-                        <div class="col my-1 small text-gray-600">{{ item['notes'] or ''}}</div>
-                        {% if item['link'] %}
+                        <div class="col my-1 small text-gray-600">{{ idea['notes'] or ''}}</div>
+                        {% if idea['link'] %}
                         <div class="col">
-                            <div class="card shadow-sm">
-                                <a class=" small font-weight-bold text-blue" href="{{ item['link'] }}" target="_blank"
-                                    rel="noopener noreferrer">Link</a>
-                            </div>
+                            <a class="btn btn-primary btn-sm shadow-sm font-weight-bold" href="{{ idea['link'] }}"
+                                target="_blank" rel="noopener noreferrer">Link</a>
                         </div>
                         {% endif %}
-                        {% if item['map-link'] %}
-                        <div class="col mb-1 small font-weight-bold text-gray-600">{{ item['map-link'] }}
+                        {% if idea['map-link'] %}
+                        <div class="col">
+                            <a class="btn btn-secondary btn-sm shadow-sm font-weight-bold" href="{{ idea['map-link'] }}"
+                                target="_blank" rel="noopener noreferrer">Map</a>
                         </div>
                         {% endif %}
                     </div>
@@ -76,108 +79,47 @@ Ideas
                 <div class="col">
                     <div class="row align-items-center">
                         <a href="#"
-                            class="btn col-sm-auto btn-light btn-sm card border-left-success shadow m-1 p-1 align-self-start align-items-center"
+                            class="btn col-auto btn-light btn-sm card border-left-secondary shadow my-1 mx-1 p-1 align-self-start"
                             data-bs-toggle="modal" data-bs-target="#AddIdeaModal{{ day }}">
-                            <div class="card-body p-1 m-0 align-items-center">
-                                <div class="row align-items-center justify-content-start m-sm-0">
-                                    <div
-                                        class="col-sm-2 align-items-center m-2 p-0 font-weight-bold text-primary text-capitalize">
-                                        <div class="text-success h3 align-items-center fa-solid fa-plus fa-2xs"></div>
-                                    </div>
-                                    <div class="col align-items-center align-self-star m-2 text-gray-800">
-                                        Add an idea
+                            <div class=" card-body py-1 pl-1">
+                            <div class="row no-gutters align-items-center justify-content-start">
+                                <div class="col-auto align-items-center mr-4 mx-2">
+                                    <div class="row font-weight-bold text-primary text-capitalize mb-1">
+                                        <div class="text-secondary fa-solid fa-plus fa-xl"></div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Add idea modal dialog-->
-    <div class="modal fade" id="AddIdeaModal{{ day }}" tabindex="-1" role="dialog" aria-labelledby="LabelDeleteModal"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form action="/idea-add" method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="LabelDeleteModal">Add a new idea below</h5>
-                        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">x</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="card shadow p-2 m-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
-                                    <input type="hidden" type="text" id="dest_id" name="dest_id"
-                                        value="{{ dest['id'] }}">
-                                    <div class="mb-2">
-                                        <label for="description" class="form-label text-black">Description</label>
-                                        <input autofocus class="form-control w-100" id="description" name="description"
-                                            placeholder="Describe idea/place" type="text">
-                                    </div>
-                                    <div class="mb-2">
-                                        <label for="notes" class="form-label text-black">Notes</label>
-                                        <input class="form-control w-100" id="notes" name="notes"
-                                            placeholder="Notes (optional)" type="text">
-                                    </div>
-                                    <div class="mb-2">
-                                        <label for="link" class="form-label text-black">Link</label>
-                                        <input class="form-control w-100" id="link" name="link"
-                                            placeholder="Paste a link to a webpage or google for this idea" type="text">
-                                    </div>
+                                <div class="col-auto align-self-start">
+                                    Add an idea
                                 </div>
                             </div>
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-                        <button class="btn btn-primary" type="submit">Add</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {% else %}
-    <div class="col">
-        <!-- Card for the empty data - no ideas in db -->
-        <div class="card shadow mb-2">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Move up</a></li>
-                        <li><a class="dropdown-item" href="#">Move down</a></li>
-                        <li><a class="dropdown-item" href="#">Complete</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                    </ul>
                 </div>
             </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                Nothing here yet. Add your ideas below!
-            </div>
-            <div class="card border-left-secondary shadow p-2 m-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <form action="/idea-add" method="post">
-                                <input type="hidden" type="text" id="day" name="day" value="1">
-                                <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest['id'] }}">
+        </div>
+    </div>
+</div>
+<!-- Add idea modal dialog-->
+<div class="modal fade" id="AddIdeaModal{{ day }}" tabindex="-1" role="dialog" aria-labelledby="LabelDeleteModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="/idea-add" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="LabelDeleteModal">Add a new idea below</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="card shadow p-2 m-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
+                                <input type="hidden" type="text" id="dest_id" name="dest_id"
+                                    value="{{ dest_data['id'] }}">
                                 <div class="mb-2">
                                     <label for="description" class="form-label text-black">Description</label>
                                     <input autofocus class="form-control w-100" id="description" name="description"
@@ -193,34 +135,95 @@ Ideas
                                     <input class="form-control w-100" id="link" name="link"
                                         placeholder="Paste a link to a webpage or google for this idea" type="text">
                                 </div>
-                                <button class="btn btn-primary my-2" type="submit">Add</button>
-                            </form>
+                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="col">
+    <!-- Card for the empty data - no ideas in db -->
+    <div class="card shadow mb-2">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                    aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">Move up</a></li>
+                    <li><a class="dropdown-item" href="#">Move down</a></li>
+                    <li><a class="dropdown-item" href="#">Complete</a></li>
+                    <li><a class="dropdown-item" href="#">Delete</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            Nothing here yet. Add your ideas below!
+        </div>
+        <div class="card border-left-secondary shadow p-2 m-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <form action="/idea-add" method="post">
+                            <input type="hidden" type="text" id="day" name="day" value="1">
+                            <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
+                            <div class="mb-2">
+                                <label for="description" class="form-label text-black">Description</label>
+                                <input autofocus class="form-control w-100" id="description" name="description"
+                                    placeholder="Describe idea/place" type="text">
+                            </div>
+                            <div class="mb-2">
+                                <label for="notes" class="form-label text-black">Notes</label>
+                                <input class="form-control w-100" id="notes" name="notes" placeholder="Notes (optional)"
+                                    type="text">
+                            </div>
+                            <div class="mb-2">
+                                <label for="link" class="form-label text-black">Link</label>
+                                <input class="form-control w-100" id="link" name="link"
+                                    placeholder="Paste a link to a webpage or google for this idea" type="text">
+                            </div>
+                            <button class="btn btn-primary my-2" type="submit">Add</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {% endfor %}
-    <div class="col">
-        <!-- Card-button for adding a day -->
-        <a href="#" class="btn btn-light btn-lg card border-left-primary shadow my-3 justify-content-start p-0">
-            <div class="card-body p-0 align-items-center">
-                <div class="row no-gutters align-items-center justify-content-start align-self-start p-0">
-                    <div class="col-1 align-items-center mr-0 p-0 justify-content-start">
-                        <div class="row p-0 h1 font-weight-bold text-primary text-capitalize mb-1">
-                            <div class="p-1 fa-solid fa-plus fa-l"></div>
-                        </div>
+</div>
+{% endfor %}
+<div class="col">
+    <!-- Card-button for adding a day -->
+    <a href="#" class="btn btn-light btn-lg card border-left-primary shadow my-3 justify-content-start p-0">
+        <div class="card-body p-0 align-items-center">
+            <div class="row no-gutters align-items-center justify-content-start align-self-start p-0">
+                <div class="col-1 align-items-center mr-0 p-0 justify-content-start">
+                    <div class="row p-0 h1 font-weight-bold text-primary text-capitalize mb-1">
+                        <div class="p-1 fa-solid fa-plus fa-l"></div>
                     </div>
-                    <div class="col h6 align-items-center justify-content-start p-1 m-0">
-                        <div class="row ml-0 text-md-left m-0 p-0 font-weight-bold align-self-center text-gray-600">Add
-                            a
-                            day to your plans
-                        </div>
+                </div>
+                <div class="col h6 align-items-center justify-content-start p-1 m-0">
+                    <div class="row ml-0 text-md-left m-0 p-0 font-weight-bold align-self-center text-gray-600">Add
+                        a
+                        day to your plans
                     </div>
                 </div>
             </div>
-        </a>
-    </div>
+        </div>
+    </a>
+</div>
 </div>
 {% endblock %}
