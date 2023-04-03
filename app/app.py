@@ -361,6 +361,27 @@ def idea_add():
             db.commit()
         return redirect("/ideas")
 
+@app.route("/idea_delete", methods=["POST"])
+@login_required
+def idea_delete():
+    """Deleting an idea from db"""
+    used_id = session["user_id"]
+    dest_id = request.form.get("dest_id")
+    id = request.form.get("id")
+    if not dest_id or not id: 
+        return apology("Invalid input", 400)
+    with engine.begin() as db:
+        db.execute(
+            delete(ideas_table).where(
+                and_(
+                    ideas_table.c.user_id == used_id,
+                    ideas_table.c.dest_id == dest_id,
+                    ideas_table.c.id == id
+                )
+            )
+        )
+    return 
+
 
 if __name__ == "__main__":
     app.run()
