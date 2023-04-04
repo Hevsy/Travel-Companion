@@ -18,10 +18,10 @@ Ideas
 <div class="col">
     {% for day in range(1, dest_data['days'] + 1) %}
     <!-- Card showing a destination -->
-    <div class="card shadow">
+    <div class="card shadow mb-2">
         <!-- Card Header - Dropdown -->
         <div class="card-header py-3 d-flex flex-row justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Day {{  day  }}</h6>
             <div class="dropdown no-arrow">
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -129,7 +129,8 @@ Ideas
                                 </button>
                                 <form action="/idea_delete" method="post" role="form">
                                     <input type="hidden" type="text" id="id" name="id" value="{{ idea['id'] }}">
-                                    <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
+                                    <input type="hidden" type="text" id="dest_id" name="dest_id"
+                                        value="{{ dest_data['id'] }}">
                                     <button class="btn btn-primary" type="submit">Delete</button>
                                 </form>
                             </div>
@@ -268,25 +269,24 @@ Ideas
         </div>
     </div>
     {% endfor %}
-    <div class="col">
-        <!-- Card-button for adding a day -->
-        <a href="#" class="btn btn-light btn-lg card border-left-primary shadow my-3 justify-content-start p-0">
-            <div class="card-body p-0 align-items-center">
-                <div class="row no-gutters align-items-center justify-content-start align-self-start p-0">
-                    <div class="col-1 align-items-center mr-0 p-0 justify-content-start">
-                        <div class="row p-0 h1 font-weight-bold text-primary text-capitalize mb-1">
-                            <div class="p-1 fa-solid fa-plus fa-l"></div>
-                        </div>
+    <!-- Card-button for adding a day -->
+    <form action="/day_add" method="post">
+        <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
+        <button type="submit"
+            class="col btn btn-light btn-lg card border-left-primary shadow my-3 justify-content-start p-0">
+            <div class="card-body p-0 align-items-center row">
+                <div class="col-auto align-items-center mx-3 p-0 justify-content-start">
+                    <div class="p-0 h1 font-weight-bold text-primary text-capitalize mb-1">
+                        <div class="p-1 fa-solid fa-plus fa-l"></div>
                     </div>
-                    <div class="col h6 align-items-center justify-content-start p-1 m-0">
-                        <div class="row ml-0 text-md-left m-0 p-0 font-weight-bold align-self-center text-gray-600">Add
-                            a
-                            day to your plans
-                        </div>
+                </div>
+                <div class="col-auto h6 align-items-center justify-content-start p-1 m-0">
+                    <div class="ml-1 text-md-left m-0 p-0 font-weight-bold align-self-center text-gray-600">
+                        Add a day to your plans
                     </div>
                 </div>
             </div>
-        </a>
-    </div>
+        </button>
+    </form>
 </div>
 {% endblock %}

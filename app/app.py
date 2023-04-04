@@ -284,7 +284,7 @@ def dest_delete():
 @login_required
 def ideas():
     """Ideas page for selected destination"""
-    if request.method == "GET":
+    if request.method != "POST":
         return redirect("/dest")
     else:
         user_id = session["user_id"]
@@ -302,7 +302,7 @@ def ideas():
 @login_required
 def idea_add():
     """Editing destination"""
-    if request.method == "GET":
+    if request.method != "POST":
         # This function always requires input from the front-end - redirect if no input
         return redirect("/dest")
     else:
@@ -335,39 +335,43 @@ def idea_add():
             )
 
 
-@app.route("/idea_delete", methods=["POST"])
+@app.route("/idea_delete", methods=["GET", "POST"])
 @login_required
 def idea_delete():
     """Deleting an idea from db"""
-    user_id = session["user_id"]
-    dest_id = request.form.get("dest_id")
-    id = request.form.get("id")
-    if not dest_id or not id:
-        return apology("Invalid input", 400)
-    with engine.begin() as db:
-        db.execute(
-            delete(ideas_table).where(
-                and_(
-                    ideas_table.c.user_id == user_id,
-                    ideas_table.c.dest_id == dest_id,
-                    ideas_table.c.id == id,
+    if request.method == "POST":
+        user_id = session["user_id"]
+        dest_id = request.form.get("dest_id")
+        id = request.form.get("id")
+        if not dest_id or not id:
+            return apology("Invalid input", 400)
+        with engine.begin() as db:
+            db.execute(
+                delete(ideas_table).where(
+                    and_(
+                        ideas_table.c.user_id == user_id,
+                        ideas_table.c.dest_id == dest_id,
+                        ideas_table.c.id == id,
+                    )
                 )
             )
-        )
-        # Get all the ideas for the current destination and pass to the template
-        ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-        dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-        return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
+            # Get all the ideas for the current destination and pass to the template
+            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+            return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
+    else:
+        return redirect("/dest")
 
 
-@app.route("/day_add")
+@app.route("/day_add", methods=["GET", "POST"])
 @login_required
 def day_add():
     """Adding a day to a destination"""
-    if request.method == ["POST"]:
+    if request.method == "POST":
         user_id = session["user_id"]
         dest_id = request.form.get("dest_id")
         with engine.begin() as db:
+            # Check how many days it is
             days = int(db.execute(
                 select(destinations_table.c.days).where(
                     and_(
@@ -376,14 +380,18 @@ def day_add():
                     )
                 )
             ).all()[0][0])
+            # Increase amount of days by 1
             db.execute(
                 update(destinations_table)
                 .where(destinations_table.c.id == dest_id)
-                .values(days=days + 1)
+                .values(days=days+1)
             )
-            return redirect("/dest")
+            # Get all the updated data for the current destination and pass to the template
+            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+            return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
     else:
-        return apology("Method not allowed", 403)
+        return redirect("/dest")
 
 
 if __name__ == "__main__":
