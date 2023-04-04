@@ -10,8 +10,9 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "app.py",
-                "FLASK_ENV": "development"
+                "FLASK_APP": "app/app.py",
+                "FLASK_DEBUG": "1",
+                "TEMPLATES_AUTO_RELOAD": "1",
             },
             "args": [
                 "run",

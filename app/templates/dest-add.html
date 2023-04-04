@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Destinations
+{% endblock %}
+
+{% block title2 %}
+Add new destination
+{% endblock %}
+
+{% block main %}
+<div>
+    <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Add new destination</h1>
+    <p class="mb-4">Whether you already booked a trip or just dreaming about going somewhere, dot your thoughts and
+        ideas here. Create and review your destinations here.</p>
+</div>
+<div class="row">
+    <div class="col-lg col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 p-2 w-100">
+            <form action="/dest-add" method="post">
+                <div class="mb-2">
+                    <label for="name" class="form-label text-black">Name</label>
+                    <input autofocus class="form-control w-100" id="name" name="name"
+                        placeholder="Place you want to go" type="text">
+                </div>
+                <div class="mb-2">
+                    <label for="country" class="form-label text-black">Country</label>
+                    <input class="form-control w-100" id="country" name="country"
+                        placeholder="Country (optional)" type="text">
+                </div>
+                <div class="mb-2">
+                    <label for="year" class="form-label text-black">Year</label>
+                    <input class="form-control w-100" id="year" name="year"
+                        placeholder="Year you're planning to go (optional)" type="text">
+                </div>
+                <button class="btn btn-primary my-2" type="submit">Add destination</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

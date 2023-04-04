@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Destinations
+{% endblock %}
+
+{% block title2 %}
+Edit destination
+{% endblock %}
+
+{% block main %}
+<div>
+    <h1 class="h3 mb-2 text-gray-800 font-weight-bold">Edit</h1>
+    <h1 class="h3 mb-3 text-primary font-weight-bold">{{ data['name'] }}</h1>
+
+</div>
+<div class="row">
+    <div class="col-lg col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 p-2 w-100">
+            <form action="/dest-edit" method="post">
+                <div class="mb-2">
+                    <label for="name" class="form-label text-black">Name</label>
+                    <input class="form-control w-100" id="name" name="name" placeholder="Place you want to go"
+                        type="text" value="{{ data['name'] }}">
+                </div>
+                <div class="mb-2">
+                    <label for="country" class="form-label text-black">Country</label>
+                    <input class="form-control w-100" id="country" name="country" placeholder="Country (optional)"
+                        type="text" value="{{ data['country'] or ''}}">
+                </div>
+                <div class="mb-2">
+                    <label for="year" class="form-label text-black">Year</label>
+                    <input class="form-control w-100" id="year" name="year"
+                        placeholder="Year you're planning to go (optional)" type="text" value="{{ data['year'] or ''}}">
+                </div>
+                <input type="hidden" type="text" id="action" name="action" value="edit">
+                <input type="hidden" type="text" id="id" name="id" value="{{ data['id'] }}">
+                <button class="btn btn-primary my-2" type="submit">Change</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

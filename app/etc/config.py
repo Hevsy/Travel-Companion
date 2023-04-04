@@ -14,7 +14,7 @@ db_config = {
     "username": "root",
     "pass": "root",
     "host": "localhost",
-    "db": "project-tc"
+    "db": "project-tc",
 }
 
 db_config_test = {
@@ -22,5 +22,5 @@ db_config_test = {
     "username": None,
     "pass": None,
     "host": None,
-    "db": "finance.db"
+    "db": "finance.db",
 }
