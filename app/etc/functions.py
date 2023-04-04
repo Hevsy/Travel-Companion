@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import redirect, render_template, session
-from werkzeug.security import check_password_hash, generate_password_hash
-from sqlalchemy import and_, delete, insert, select
+from werkzeug.security import generate_password_hash
+from sqlalchemy import and_, insert, select
 
 
 def apology(message, code=400):
@@ -77,7 +77,7 @@ def get_dest_by_id(dest_id, db, user_id, destinations_table):
         ).where(
             and_(
                 destinations_table.c.user_id == user_id,
-                destinations_table.c.id == dest_id,
+                destinations_table.c.id == dest_id
             )
         )
     ).all()[0]

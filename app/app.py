@@ -267,16 +267,30 @@ def dest_delete():
     if request.method == "GET":
         return redirect("/dest")
     else:
+        user_id = session["user_id"]
         dest_id = request.form.get("id")
+        # Delete all ideas related to this destination first
         with engine.begin() as db:
-            data = db.execute(
-                delete(destinations_table).where(
+            db.execute(
+                delete(ideas_table).where(
                     and_(
-                        destinations_table.c.user_id == session["user_id"],
-                        destinations_table.c.id == dest_id,
+                        ideas_table.c.user_id == user_id,
+                        ideas_table.c.dest_id == dest_id
                     )
                 )
             )
+            db.commit()
+        # Delete a destination record
+        with engine.begin() as db:
+            db.execute(
+                delete(destinations_table).where(
+                    and_(
+                        destinations_table.c.user_id == user_id,
+                        destinations_table.c.id == dest_id
+                    )
+                )
+            )
+            db.commit()
         return redirect("/dest")
 
 
@@ -330,6 +344,7 @@ def idea_add():
             # Get all the ideas for the current destination and pass to the template
             ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
             dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+            db.commit()
             return render_template(
                 "ideas.html", ideas_data=ideas_data, dest_data=dest_data
             )
@@ -355,10 +370,14 @@ def idea_delete():
                     )
                 )
             )
+            db.commit()
+        with engine.begin() as db:
             # Get all the ideas for the current destination and pass to the template
             ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
             dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-            return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
+            return render_template(
+                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+            )
     else:
         return redirect("/dest")
 
@@ -371,25 +390,32 @@ def day_add():
         user_id = session["user_id"]
         dest_id = request.form.get("dest_id")
         with engine.begin() as db:
-            # Check how many days it is
-            days = int(db.execute(
-                select(destinations_table.c.days).where(
-                    and_(
-                        ideas_table.c.user_id == user_id,
-                        ideas_table.c.dest_id == dest_id,
+            # Check how many days it is and increment by 1
+            days = int(
+                db.execute(
+                    select(destinations_table.c.days).where(
+                        and_(
+                            destinations_table.c.user_id == user_id,
+                            destinations_table.c.id == dest_id,
+                        )
                     )
-                )
-            ).all()[0][0])
-            # Increase amount of days by 1
+                ).all()[0][0]
+            )
+            days += 1
+            # Update destination in db
             db.execute(
                 update(destinations_table)
                 .where(destinations_table.c.id == dest_id)
-                .values(days=days+1)
+                .values(days=days)
             )
+            db.commit()
+        with engine.begin() as db:
             # Get all the updated data for the current destination and pass to the template
             ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
             dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-            return render_template("ideas.html", ideas_data=ideas_data, dest_data=dest_data)
+            return render_template(
+                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+            )
     else:
         return redirect("/dest")
 
