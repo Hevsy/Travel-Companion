@@ -1,9 +1,7 @@
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, url_for
 from sqlalchemy import and_, delete, insert, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from flask_session import Session
-
 from .etc.db_init import db_init
 from .etc.functions import (
     apology,
@@ -14,6 +12,7 @@ from .etc.functions import (
     register_user,
     strip_args,
 )
+import requests
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -275,7 +274,7 @@ def dest_delete():
                 delete(ideas_table).where(
                     and_(
                         ideas_table.c.user_id == user_id,
-                        ideas_table.c.dest_id == dest_id
+                        ideas_table.c.dest_id == dest_id,
                     )
                 )
             )
@@ -286,7 +285,7 @@ def dest_delete():
                 delete(destinations_table).where(
                     and_(
                         destinations_table.c.user_id == user_id,
-                        destinations_table.c.id == dest_id
+                        destinations_table.c.id == dest_id,
                     )
                 )
             )
@@ -341,13 +340,7 @@ def idea_add():
         with engine.begin() as db:
             # Add the idea to the db
             db.execute(insert(ideas_table).values(args))  # type: ignore
-            # Get all the ideas for the current destination and pass to the template
-            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-            db.commit()
-            return render_template(
-                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-            )
+            return requests.post(url_for("ideas"), data={"id":dest_id})
 
 
 @app.route("/idea_delete", methods=["GET", "POST"])
