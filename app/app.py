@@ -12,7 +12,6 @@ from .etc.functions import (
     register_user,
     strip_args,
 )
-import requests
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -300,15 +299,65 @@ def ideas():
     if request.method != "POST":
         return redirect("/dest")
     else:
+        action = request.form.get("action")
         user_id = session["user_id"]
         dest_id = request.form.get("id")
-        with engine.begin() as db:
-            # Get all the ideas for the current destination and pass to the template
-            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-            return render_template(
-                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-            )
+        if not action:
+            with engine.begin() as db:
+                # Get all the ideas for the current destination and pass to the template
+                ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+                return render_template(
+                    "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+                )
+        elif action == "add":
+            args = {
+                "user_id": user_id,
+                "dest_id": dest_id,
+                "description": request.form.get("description"),
+                "notes": request.form.get("notes"),
+                "link": request.form.get("link"),
+                "map_link": request.form.get("map_link"),
+                "day": request.form.get("day"),
+                "completed": False,
+            }
+            # Check for required input - description must be provided
+            if not args["description"]:
+                return apology("Must provide description", 403)
+            # Remove empty arguments and insert data into db
+            args = strip_args(args)
+            with engine.begin() as db:
+                # Add the idea to the db
+                db.execute(insert(ideas_table).values(args))  # type: ignore
+                # Get updated ideas for the current destination and pass to the template
+                ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+                return render_template(
+                    "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+                )
+        elif action == "delete":
+            id = request.form.get("id")
+            if not dest_id or not id:
+                return apology("Invalid input", 400)
+            with engine.begin() as db:
+                db.execute(
+                    delete(ideas_table).where(
+                        and_(
+                            ideas_table.c.user_id == user_id,
+                            ideas_table.c.dest_id == dest_id,
+                            ideas_table.c.id == id,
+                        )
+                    )
+                )
+                db.commit()
+            with engine.begin() as db:
+                # Get all the ideas for the current destination and pass to the template
+                ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+                return render_template(
+                    "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+                )
+
 
 
 @app.route("/idea-add", methods=["GET", "POST"])
@@ -340,7 +389,13 @@ def idea_add():
         with engine.begin() as db:
             # Add the idea to the db
             db.execute(insert(ideas_table).values(args))  # type: ignore
-            return requests.post(url_for("ideas"), data={"id":dest_id})
+            # Get all the ideas for the current destination and pass to the template
+            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
+            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+            db.commit()
+            return render_template(
+                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
+            )
 
 
 @app.route("/idea_delete", methods=["GET", "POST"])
