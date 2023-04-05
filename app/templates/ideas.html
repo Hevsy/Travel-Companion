@@ -121,14 +121,15 @@ Ideas
                             <div class="modal-body">
                                 Click "Delete" below to permanently delete this record
                                 <p class="text-danger">Warning! The data will be permanently deleted and couldn't be
-                                    resored!</p>
+                                    restored!</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
                                     Cancel
                                 </button>
-                                <form action="/idea_delete" method="post" role="form">
-                                    <input type="hidden" type="text" id="id" name="id" value="{{ idea['id'] }}">
+                                <form action="/ideas" method="post" role="form">
+                                    <input type="hidden" type="text" id="action" name="action" value="delete">
+                                    <input type="hidden" type="text" id="idea_id" name="idea_id" value="{{ idea['id'] }}">
                                     <input type="hidden" type="text" id="dest_id" name="dest_id"
                                         value="{{ dest_data['id'] }}">
                                     <button class="btn btn-primary" type="submit">Delete</button>
@@ -167,7 +168,8 @@ Ideas
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form action="/idea-add" method="post">
+                <form action="/ideas" method="post">
+                    <input type="hidden" type="text" id="action" name="action" value="add">
                     <div class="modal-header">
                         <h5 class="modal-title" id="LabelDeleteModal">Add a new idea below</h5>
                         <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
@@ -212,65 +214,10 @@ Ideas
             </div>
         </div>
     </div>
-    {% else %}
-    <div class="col">
-        <!-- Card for the empty data - no ideas in db -->
-        <div class="card shadow mb-2">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Day 1</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Move up</a></li>
-                        <li><a class="dropdown-item" href="#">Move down</a></li>
-                        <li><a class="dropdown-item" href="#">Complete</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                    </ul>
-                </div>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                Nothing here yet. Add your ideas below!
-            </div>
-            <div class="card border-left-secondary shadow p-2 m-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <form action="/idea-add" method="post">
-                                <input type="hidden" type="text" id="day" name="day" value="1">
-                                <input type="hidden" type="text" id="dest_id" name="dest_id"
-                                    value="{{ dest_data['id'] }}">
-                                <div class="mb-2">
-                                    <label for="description" class="form-label text-black">Description</label>
-                                    <input autofocus class="form-control w-100" id="description" name="description"
-                                        placeholder="Describe idea/place" type="text">
-                                </div>
-                                <div class="mb-2">
-                                    <label for="notes" class="form-label text-black">Notes</label>
-                                    <input class="form-control w-100" id="notes" name="notes"
-                                        placeholder="Notes (optional)" type="text">
-                                </div>
-                                <div class="mb-2">
-                                    <label for="link" class="form-label text-black">Link</label>
-                                    <input class="form-control w-100" id="link" name="link"
-                                        placeholder="Paste a link to a webpage or google for this idea" type="text">
-                                </div>
-                                <button class="btn btn-primary my-2" type="submit">Add</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     {% endfor %}
     <!-- Card-button for adding a day -->
-    <form action="/day_add" method="post">
+    <form action="/ideas" method="post">
+        <input type="hidden" type="text" id="action" name="action" value="day_add">
         <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
         <button type="submit"
             class="col btn btn-light btn-lg card border-left-primary shadow my-3 justify-content-start p-0">

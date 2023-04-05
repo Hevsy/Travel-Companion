@@ -6,10 +6,13 @@ from .etc.db_init import db_init
 from .etc.functions import (
     apology,
     check_if_username_exists,
+    day_add,
+    delete_idea,
     get_dest_by_id,
     get_ideas,
     login_required,
     register_user,
+    render_ideas,
     strip_args,
 )
 
@@ -74,21 +77,19 @@ def register():
             return apology("Passwords do not match!")
         print(username, password, confirmation)
         # Check if username already exists
+        if check_if_username_exists(username):
+            return apology("Username already exists")
+        else:
+            register_user(username, password)
+        # Remember which user has registered and log they in
         with engine.begin() as db:
-            if check_if_username_exists(db, username, users_table):
-                return apology("Username already exists")
-            else:
-                register_user(username, password, db, users_table)
-
-                # Remember which user has registered and log they in
-                user_id = db.execute(
-                    select(users_table.c["id"]).where(
-                        users_table.c.username == username
-                    )
-                ).all()[0][0]
-
-                session["user_id"] = user_id
-                return redirect("/")
+            user_id = db.execute(
+                select(users_table.c["id"]).where(
+                    users_table.c.username == username
+                )
+            ).all()[0][0]
+            session["user_id"] = user_id
+        return redirect("/")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -225,11 +226,11 @@ def dest_edit():
         return redirect("/dest")
     else:
         action = request.form.get("action")
-        dest_id = str(request.form.get("id"))
+        dest_id = str(request.form.get("dest_id"))
         user_id = session["user_id"]
         if action == "call":
             with engine.begin() as db:
-                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
+                dest_data = get_dest_by_id(dest_id, user_id)
                 return render_template("dest-edit.html", data=dest_data)
         elif action == "edit":
             # Create a list of arguments for SQLALchemy
@@ -266,7 +267,7 @@ def dest_delete():
         return redirect("/dest")
     else:
         user_id = session["user_id"]
-        dest_id = request.form.get("id")
+        dest_id = request.form.get("dest_id")
         # Delete all ideas related to this destination first
         with engine.begin() as db:
             db.execute(
@@ -301,16 +302,8 @@ def ideas():
     else:
         action = request.form.get("action")
         user_id = session["user_id"]
-        dest_id = request.form.get("id")
-        if not action:
-            with engine.begin() as db:
-                # Get all the ideas for the current destination and pass to the template
-                ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-                return render_template(
-                    "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-                )
-        elif action == "add":
+        dest_id = request.form.get("dest_id")
+        if action == "add":
             args = {
                 "user_id": user_id,
                 "dest_id": dest_id,
@@ -329,143 +322,14 @@ def ideas():
             with engine.begin() as db:
                 # Add the idea to the db
                 db.execute(insert(ideas_table).values(args))  # type: ignore
-                # Get updated ideas for the current destination and pass to the template
-                ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-                return render_template(
-                    "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-                )
         elif action == "delete":
-            id = request.form.get("id")
+            idea_id = request.form.get("idea_id")
             if not dest_id or not id:
                 return apology("Invalid input", 400)
-            with engine.begin() as db:
-                db.execute(
-                    delete(ideas_table).where(
-                        and_(
-                            ideas_table.c.user_id == user_id,
-                            ideas_table.c.dest_id == dest_id,
-                            ideas_table.c.id == id,
-                        )
-                    )
-                )
-                db.commit()
-            with engine.begin() as db:
-                # Get all the ideas for the current destination and pass to the template
-                ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-                dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-                return render_template(
-                    "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-                )
-
-
-
-@app.route("/idea-add", methods=["GET", "POST"])
-@login_required
-def idea_add():
-    """Editing destination"""
-    if request.method != "POST":
-        # This function always requires input from the front-end - redirect if no input
-        return redirect("/dest")
-    else:
-        # Create a list of arguments for SQLALchemy
-        dest_id = request.form.get("dest_id")
-        user_id = session["user_id"]
-        args = {
-            "user_id": user_id,
-            "dest_id": dest_id,
-            "description": request.form.get("description"),
-            "notes": request.form.get("notes"),
-            "link": request.form.get("link"),
-            "map_link": request.form.get("map_link"),
-            "day": request.form.get("day"),
-            "completed": False,
-        }
-        # Check for required input - description must be provided
-        if not args["description"]:
-            return apology("Must provide description", 403)
-        # Remove empty arguments and insert data into db
-        args = strip_args(args)
-        with engine.begin() as db:
-            # Add the idea to the db
-            db.execute(insert(ideas_table).values(args))  # type: ignore
-            # Get all the ideas for the current destination and pass to the template
-            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-            db.commit()
-            return render_template(
-                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-            )
-
-
-@app.route("/idea_delete", methods=["GET", "POST"])
-@login_required
-def idea_delete():
-    """Deleting an idea from db"""
-    if request.method == "POST":
-        user_id = session["user_id"]
-        dest_id = request.form.get("dest_id")
-        id = request.form.get("id")
-        if not dest_id or not id:
-            return apology("Invalid input", 400)
-        with engine.begin() as db:
-            db.execute(
-                delete(ideas_table).where(
-                    and_(
-                        ideas_table.c.user_id == user_id,
-                        ideas_table.c.dest_id == dest_id,
-                        ideas_table.c.id == id,
-                    )
-                )
-            )
-            db.commit()
-        with engine.begin() as db:
-            # Get all the ideas for the current destination and pass to the template
-            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-            return render_template(
-                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-            )
-    else:
-        return redirect("/dest")
-
-
-@app.route("/day_add", methods=["GET", "POST"])
-@login_required
-def day_add():
-    """Adding a day to a destination"""
-    if request.method == "POST":
-        user_id = session["user_id"]
-        dest_id = request.form.get("dest_id")
-        with engine.begin() as db:
-            # Check how many days it is and increment by 1
-            days = int(
-                db.execute(
-                    select(destinations_table.c.days).where(
-                        and_(
-                            destinations_table.c.user_id == user_id,
-                            destinations_table.c.id == dest_id,
-                        )
-                    )
-                ).all()[0][0]
-            )
-            days += 1
-            # Update destination in db
-            db.execute(
-                update(destinations_table)
-                .where(destinations_table.c.id == dest_id)
-                .values(days=days)
-            )
-            db.commit()
-        with engine.begin() as db:
-            # Get all the updated data for the current destination and pass to the template
-            ideas_data = get_ideas(dest_id, db, user_id, ideas_table)
-            dest_data = get_dest_by_id(dest_id, db, user_id, destinations_table)
-            return render_template(
-                "ideas.html", ideas_data=ideas_data, dest_data=dest_data
-            )
-    else:
-        return redirect("/dest")
+            delete_idea(user_id, dest_id, idea_id)
+        elif action == "day_add":
+            day_add(user_id, dest_id)
+        return render_ideas(user_id, dest_id)
 
 
 if __name__ == "__main__":

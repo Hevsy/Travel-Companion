@@ -49,7 +49,7 @@ Destinations
                         aria-labelledby="dropdownMenuLink">
                         <div class="dropdown-header text-l text-gray-600">Destination:</div>
                         <form action="/dest-edit" method="post" role="form">
-                            <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
+                            <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ row['id'] }}">
                             <input type="hidden" type="text" id="action" name="action" value="call">
                             <button class="dropdown-item" type="submit">
                                 <i class="fa-solid fa-pen-to-square fa-sm text-gray-600"></i>
@@ -70,7 +70,7 @@ Destinations
             </div>
             <!-- Card Body -->
             <form action="/ideas" href="/ideas" method="post">
-                <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
+                <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ row['id'] }}">
                 <button class="col-xl card-body btn2 btn-light h-100 no-gutters align-items-center align-middle" type="submit">
                     <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['country'] or '_'}}</div>
                     <div class="text-s mb-0 font-weight-bold text-gray-600">{{ row['year'] or '_'}}</div>
@@ -91,14 +91,14 @@ Destinations
                 </div>
                 <div class="modal-body">
                     Click "Delete" below to permanently delete this record
-                    <p class="text-danger">Warning! The data will be permanently deleted and couldn't be resored!</p>
+                    <p class="text-danger">Warning! The data will be permanently deleted and couldn't be restored!</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
                         Cancel
                     </button>
                     <form action="/dest-delete" method="post" role="form">
-                        <input type="hidden" type="text" id="id" name="id" value="{{ row['id'] }}">
+                        <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ row['id'] }}">
                         <button class="btn btn-primary" type="submit">Delete</button>
                     </form>
                 </div>
