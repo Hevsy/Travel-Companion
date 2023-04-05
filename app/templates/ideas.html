@@ -21,7 +21,7 @@ Ideas
     <div class="card shadow mb-2">
         <!-- Card Header - Dropdown -->
         <div class="card-header py-3 d-flex flex-row justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Day {{  day  }}</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Day {{ day }}</h6>
             <div class="dropdown no-arrow">
                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -44,7 +44,8 @@ Ideas
                     </li>
                     <div class="dropdown-divider"></div>
                     <li>
-                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
+                        <a class="dropdown-item text-gray-800" tabindex="-1" data-bs-toggle="modal"
+                            data-bs-target="#DeleteDayModal{{ day }}" aria-disabled="true">
                             <i class="fa-solid fa-trash fa-sm text-gray-800"></i>
                             Delete
                         </a>
@@ -129,7 +130,8 @@ Ideas
                                 </button>
                                 <form action="/ideas" method="post" role="form">
                                     <input type="hidden" type="text" id="action" name="action" value="delete">
-                                    <input type="hidden" type="text" id="idea_id" name="idea_id" value="{{ idea['id'] }}">
+                                    <input type="hidden" type="text" id="idea_id" name="idea_id"
+                                        value="{{ idea['id'] }}">
                                     <input type="hidden" type="text" id="dest_id" name="dest_id"
                                         value="{{ dest_data['id'] }}">
                                     <button class="btn btn-primary" type="submit">Delete</button>
@@ -214,6 +216,37 @@ Ideas
             </div>
         </div>
     </div>
+    <!-- Delete Day Modal Window-->
+    <div class="modal fade" id="DeleteDayModal{{ day }}" tabindex="-1" role="dialog"
+        aria-labelledby="LabelDeleteModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="LabelDeleteModal">Please confirm</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Click "Delete" below to permanently delete this day and all ideas inside it
+                    <p class="text-danger">Warning! The data will be permanently deleted and couldn't be
+                        restored!</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <form action="/ideas" method="post" role="form">
+                        <input type="hidden" type="text" id="action" name="action" value="day_delete">
+                        <input type="hidden" type="text" id="day" name="idea_id" value="{{ day }}">
+                        <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
+                        <button class="btn btn-primary" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% endfor %}
     <!-- Card-button for adding a day -->
     <form action="/ideas" method="post">

@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, redirect, render_template, request, session
 from sqlalchemy import and_, delete, insert, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
@@ -7,9 +7,9 @@ from .etc.functions import (
     apology,
     check_if_username_exists,
     day_add,
+    day_delete,
     delete_idea,
     get_dest_by_id,
-    get_ideas,
     login_required,
     register_user,
     render_ideas,
@@ -329,6 +329,9 @@ def ideas():
             delete_idea(user_id, dest_id, idea_id)
         elif action == "day_add":
             day_add(user_id, dest_id)
+        elif action == "day_delete":
+            day = request.form.get("day")
+            day_delete(user_id, dest_id, day)
         return render_ideas(user_id, dest_id)
 
 

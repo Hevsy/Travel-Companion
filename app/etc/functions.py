@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash
 from sqlalchemy import and_, delete, insert, select, update
 
 
-
 def apology(message, code=400):
     """Render an error/apology message"""
     return render_template("apology.html", code=code, message=message), code
@@ -137,6 +136,47 @@ def day_add(user_id, dest_id):
             ).all()[0][0]
         )
         days += 1
+        # Update destination in db
+        db.execute(
+            update(destinations_table)
+            .where(destinations_table.c.id == dest_id)
+            .values(days=days)
+        )
+        db.commit()
+
+
+def day_delete(user_id, dest_id, day):
+    """Delete a day from selected destination"""
+    from app.app import engine, destinations_table, ideas_table
+
+    with engine.begin() as db:
+        # Delete all ideas related to this day first
+        with engine.begin() as db:
+            db.execute(
+                delete(ideas_table).where(
+                    and_(
+                        ideas_table.c.user_id == user_id,
+                        ideas_table.c.dest_id == dest_id,
+                        ideas_table.c.day == day,
+                    )
+                )
+            )
+            db.commit()
+    with engine.begin() as db:
+        # Check how many days
+        days = int(
+            db.execute(
+                select(destinations_table.c.days).where(
+                    and_(
+                        destinations_table.c.user_id == user_id,
+                        destinations_table.c.id == dest_id,
+                    )
+                )
+            ).all()[0][0]
+        )
+        # Do not delete the last day
+        if days > 1:
+            days -= 1
         # Update destination in db
         db.execute(
             update(destinations_table)
