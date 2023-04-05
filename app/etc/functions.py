@@ -27,7 +27,7 @@ def login_required(f):
 
 
 def strip_args(args):
-    """Strips dictionary arguments from empty arguments"""
+    """Strips dictionary of arguments from empty arguments"""
     return {key: value for key, value in args.items() if value}
 
 
