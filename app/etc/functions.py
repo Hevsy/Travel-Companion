@@ -145,23 +145,37 @@ def day_add(user_id, dest_id):
         db.commit()
 
 
-def day_delete(user_id, dest_id, day):
+def day_delete(user_id, dest_id, day_to_remove):
     """Delete a day from selected destination"""
     from app.app import engine, destinations_table, ideas_table
 
+    # Delete all ideas related to this day first
     with engine.begin() as db:
-        # Delete all ideas related to this day first
-        with engine.begin() as db:
-            db.execute(
-                delete(ideas_table).where(
-                    and_(
-                        ideas_table.c.user_id == user_id,
-                        ideas_table.c.dest_id == dest_id,
-                        ideas_table.c.day == day,
-                    )
+        db.execute(
+            delete(ideas_table).where(
+                and_(
+                    ideas_table.c.user_id == user_id,
+                    ideas_table.c.dest_id == dest_id,
+                    ideas_table.c.day == day,
                 )
             )
-            db.commit()
+        )
+        db.commit()
+    # TOD - Move downstream ideas up
+    with engine.begin() as db:
+        # Get the record of all ideas
+        ideas = db.execute(
+            select(ideas_table.c.id, ideas_table.c.day).where(
+                and_(
+                    ideas_table.c.user_id == user_id,
+                    ideas_table.c.dest_id == dest_id,
+                )
+            )
+        ).all()
+        # Iterate through the ideas for the days after deleted one and move them up (decrement a day)
+        for day in ideas[]
+
+    # Updates a record for amount of days in db
     with engine.begin() as db:
         # Check how many days
         days = int(
