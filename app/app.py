@@ -1,4 +1,5 @@
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, url_for
+import requests
 from sqlalchemy import and_, delete, insert, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
@@ -84,9 +85,7 @@ def register():
         # Remember which user has registered and log they in
         with engine.begin() as db:
             user_id = db.execute(
-                select(users_table.c["id"]).where(
-                    users_table.c.username == username
-                )
+                select(users_table.c["id"]).where(users_table.c.username == username)
             ).all()[0][0]
             session["user_id"] = user_id
         return redirect("/")
@@ -297,12 +296,10 @@ def dest_delete():
 @login_required
 def ideas():
     """Ideas page for selected destination"""
-    if request.method != "POST":
-        return redirect("/dest")
-    else:
+    if request.method == "POST" or (request.method == "GET" and  request.args.get('dest_id')):
         action = request.form.get("action")
         user_id = session["user_id"]
-        dest_id = request.form.get("dest_id")
+        dest_id = request.form.get("dest_id") or request.args.get('dest_id')
         if action == "add":
             args = {
                 "user_id": user_id,
@@ -330,9 +327,36 @@ def ideas():
         elif action == "day_add":
             day_add(user_id, dest_id)
         elif action == "day_delete":
-            day = int(request.form.get("day")) # type: ignore
+            day = int(request.form.get("day"))  # type: ignore
             day_delete(user_id, dest_id, day)
         return render_ideas(user_id, dest_id)
+    else:
+        return redirect("/dest")
+
+
+@app.route("/idea_edit", methods=["GET", "POST"])
+@login_required
+def idea_edit():
+    """Edit specified idea"""
+    if request.method != "POST":
+        return redirect("/dest")
+    else:
+        args = {
+            "user_id": session["user_id"],
+            "dest_id": request.form.get("dest_id"),
+            "description": request.form.get("description"),
+            "notes": request.form.get("notes"),
+            "link": request.form.get("link"),
+            "map_link": request.form.get("map_link"),
+            "day": request.form.get("day"),
+            "completed": False,
+        }
+        # Check for required input - description must be provided
+        if not args["description"]:
+            return apology("Must provide description", 403)
+        with engine.begin as db:
+            
+        return redirect(url_for('ideas', dest_id=args["dest_id"]))
 
 
 if __name__ == "__main__":

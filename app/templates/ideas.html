@@ -83,8 +83,8 @@ Ideas
                                 aria-labelledby="dropdownMenuLink">
                                 <div class="dropdown-header text-l text-gray-600">Day:</div>
                                 <li>
-                                    <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1"
-                                        aria-disabled="true">
+                                    <a class="dropdown-item text-gray-800" tabindex="-1" data-bs-toggle="modal"
+                                        data-bs-target="#EditIdeaModal{{ idea['id'] }}" aria-disabled="true">
                                         <i class="fa-solid fa-pen-to-square fa-sm text-gray-800"></i>
                                         Edit
                                     </a>
@@ -105,6 +105,63 @@ Ideas
                                     </a>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Edit idea modal dialog-->
+                <div class="modal fade" id="EditIdeaModal{{ idea['id'] }}" tabindex="-1" role="dialog"
+                    aria-labelledby="LabelDeleteModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form action="/idea_edit" method="post">
+                                <input type="hidden" type="text" id="action" name="action" value="edit">
+                                <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
+                                <input type="hidden" type="text" id="dest_id" name="dest_id"
+                                    value="{{ dest_data['id'] }}">
+                                <input type="hidden" type="text" id="idea_id" name="idea_id" value="{{ idea['id'] }}">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="LabelDeleteModal">Edit idea</h5>
+                                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">x</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                </div>
+                                <div class="card shadow p-2 m-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="mb-2">
+                                                    <label for="description"
+                                                        class="form-label text-black">Description</label>
+                                                    <input autofocus class="form-control w-100" id="description"
+                                                        name="description"
+                                                        placeholder="Describe idea/place" value="{{ idea['description'] }}"
+                                                        type="text">
+                                                </div>
+                                                <div class="mb-2">
+                                                    <label for="notes" class="form-label text-black">Notes</label>
+                                                    <input class="form-control w-100" id="notes" name="notes"
+                                                        placeholder="Notes (optional)"
+                                                        type="text" value="{{ idea['notes'] or '' }}">
+                                                </div>
+                                                <div class="mb-2">
+                                                    <label for="link" class="form-label text-black">Link</label>
+                                                    <input class="form-control w-100" id="link" name="link"
+                                                        placeholder="Paste a link to a webpage or google for this idea"
+                                                        type="text" value="{{ idea['link'] or '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                                        Cancel
+                                    </button>
+                                    <button class="btn btn-primary" type="submit">Edit</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -140,7 +197,6 @@ Ideas
                         </div>
                     </div>
                 </div>
-
                 {% endfor %}
                 <div class="col">
                     <div class="row align-items-center">
@@ -217,8 +273,8 @@ Ideas
         </div>
     </div>
     <!-- Delete Day Modal Window-->
-    <div class="modal fade" id="DeleteDayModal{{ day }}" tabindex="-1" role="dialog"
-        aria-labelledby="LabelDeleteModal" aria-hidden="true">
+    <div class="modal fade" id="DeleteDayModal{{ day }}" tabindex="-1" role="dialog" aria-labelledby="LabelDeleteModal"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
