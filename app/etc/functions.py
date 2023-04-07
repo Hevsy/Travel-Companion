@@ -149,35 +149,8 @@ def day_delete(user_id, dest_id, day_to_remove):
     """Delete a day from selected destination"""
     from app.app import engine, destinations_table, ideas_table
 
-    # Delete all ideas related to this day first
     with engine.begin() as db:
-        db.execute(
-            delete(ideas_table).where(
-                and_(
-                    ideas_table.c.user_id == user_id,
-                    ideas_table.c.dest_id == dest_id,
-                    ideas_table.c.day == day,
-                )
-            )
-        )
-        db.commit()
-    # TOD - Move downstream ideas up
-    with engine.begin() as db:
-        # Get the record of all ideas
-        ideas = db.execute(
-            select(ideas_table.c.id, ideas_table.c.day).where(
-                and_(
-                    ideas_table.c.user_id == user_id,
-                    ideas_table.c.dest_id == dest_id,
-                )
-            )
-        ).all()
-        # Iterate through the ideas for the days after deleted one and move them up (decrement a day)
-        for day in ideas[]
-
-    # Updates a record for amount of days in db
-    with engine.begin() as db:
-        # Check how many days
+        # Check how many days in the current destination
         days = int(
             db.execute(
                 select(destinations_table.c.days).where(
@@ -188,7 +161,42 @@ def day_delete(user_id, dest_id, day_to_remove):
                 )
             ).all()[0][0]
         )
-        # Do not delete the last day
+        days = days
+
+        # Delete all ideas related to this day
+        db.execute(
+            delete(ideas_table).where(
+                and_(
+                    ideas_table.c.user_id == user_id,
+                    ideas_table.c.dest_id == dest_id,
+                    ideas_table.c.day == day_to_remove,
+                )
+            )
+        )
+
+        # TODO - Move downstream ideas up
+        # Get the record of all ideas
+        ideas = db.execute(
+            select(ideas_table.c.id, ideas_table.c.day).where(
+                and_(
+                    ideas_table.c.user_id == user_id,
+                    ideas_table.c.dest_id == dest_id,
+                )
+            )
+        ).all()
+        # Iterate through the ideas for the days after deleted one and move them up (decrement a day)
+        for day in range(day_to_remove, days + 1):
+            db.execute(
+                update(ideas_table).where(
+                    and_(
+                        ideas_table.c.user_id == user_id,
+                        ideas_table.c.dest_id == dest_id,
+                        ideas_table.c.day == day,
+                    )).values(day=day - 1)
+                )
+
+        # Update a record for amount of days in db
+        # Check - do not delete the last day
         if days > 1:
             days -= 1
         # Update destination in db

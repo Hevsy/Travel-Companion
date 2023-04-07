@@ -330,7 +330,7 @@ def ideas():
         elif action == "day_add":
             day_add(user_id, dest_id)
         elif action == "day_delete":
-            day = request.form.get("day")
+            day = int(request.form.get("day")) # type: ignore
             day_delete(user_id, dest_id, day)
         return render_ideas(user_id, dest_id)
 

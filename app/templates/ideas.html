@@ -238,7 +238,7 @@ Ideas
                     </button>
                     <form action="/ideas" method="post" role="form">
                         <input type="hidden" type="text" id="action" name="action" value="day_delete">
-                        <input type="hidden" type="text" id="day" name="idea_id" value="{{ day }}">
+                        <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
                         <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
                         <button class="btn btn-primary" type="submit">Delete</button>
                     </form>
