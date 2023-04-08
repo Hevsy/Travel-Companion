@@ -11,6 +11,7 @@ from .etc.functions import (
     delete_idea,
     get_dest_by_id,
     login_required,
+    move_day,
     register_user,
     render_ideas,
     strip_args,
@@ -357,7 +358,7 @@ def idea_edit():
         # Check for required input - description must be provided
         if not args["description"]:
             return apology("Must provide description", 403)
-        # Update db record 
+        # Update db record
         with engine.begin() as db:
             db.execute(
                 update(ideas_table)
@@ -369,9 +370,10 @@ def idea_edit():
                 )
                 .values(args)  # type: ignore
             )
-        session["dest_id"]=args["dest_id"]
-        return redirect(url_for("ideas"))
-    
+        session["dest_id"] = args["dest_id"]
+        return redirect("/ideas")
+
+
 @app.route("/move_day_up", methods=["GET", "POST"])
 @login_required
 def move_day_up():
@@ -379,13 +381,12 @@ def move_day_up():
     if request.method != "POST":
         return redirect("/dest")
     else:
-        args = {
-            "user_id": session["user_id"],
-            "dest_id": request.form.get("dest_id"),
-            "day": request.form.get("day")
-        }
-        session["dest_id"]=args["dest_id"]
-        return redirect(url_for("ideas"))
+        user_id = session["user_id"]
+        dest_id = request.form.get("dest_id")
+        day = request.form.get("day")
+        move_day(user_id, dest_id, day, -1)
+        session["dest_id"] = dest_id
+        return redirect("/ideas")
 
 
 if __name__ == "__main__":
