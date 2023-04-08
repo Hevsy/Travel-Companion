@@ -174,7 +174,6 @@ def day_delete(user_id, dest_id, day_to_remove):
             )
         )
 
-        # TODO - Move downstream ideas up
         # Get the record of all ideas
         ideas = db.execute(
             select(ideas_table.c.id, ideas_table.c.day).where(
@@ -209,3 +208,15 @@ def day_delete(user_id, dest_id, day_to_remove):
             .values(days=days)
         )
         db.commit()
+
+
+def move_day(user_id, dest_id, day, step):
+    """Moves the day up or down"""
+    from app.app import engine, ideas_table
+
+    with engine.begin() as db:
+        ideas = get_ideas(dest_id, user_id)
+        for idea in ideas:
+            delete_idea(user_id, dest_id, idea["id"])
+
+        return
