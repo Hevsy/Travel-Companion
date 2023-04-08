@@ -371,6 +371,21 @@ def idea_edit():
             )
         session["dest_id"]=args["dest_id"]
         return redirect(url_for("ideas"))
+    
+@app.route("/move_day_up", methods=["GET", "POST"])
+@login_required
+def move_day_up():
+    """Edit specified idea"""
+    if request.method != "POST":
+        return redirect("/dest")
+    else:
+        args = {
+            "user_id": session["user_id"],
+            "dest_id": request.form.get("dest_id"),
+            "day": request.form.get("day")
+        }
+        session["dest_id"]=args["dest_id"]
+        return redirect(url_for("ideas"))
 
 
 if __name__ == "__main__":
