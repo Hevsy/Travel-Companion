@@ -1,5 +1,4 @@
 from flask import Flask, redirect, render_template, request, session, url_for
-import requests
 from sqlalchemy import and_, delete, insert, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
@@ -177,6 +176,7 @@ def pwdchange():
 @login_required
 def dest():
     """Destinations page"""
+    session.pop("dest_id", default=None)
     with engine.begin() as db:
         # Get all the destinations for the current user and pass to the template
         destinations = db.execute(
@@ -197,6 +197,7 @@ def dest():
 @login_required
 def dest_add():
     """Adding new destination"""
+    session.pop("dest_id", default=None)
     if request.method == "GET":
         return render_template("dest-add.html")
     else:
@@ -220,6 +221,7 @@ def dest_add():
 @login_required
 def dest_edit():
     """Editing destination"""
+    session.pop("dest_id", default=None)
     if request.method == "GET":
         # This function always requires input from the front-end - redirect if no input
         return redirect("/dest")
@@ -262,6 +264,7 @@ def dest_edit():
 @login_required
 def dest_delete():
     """Deleting destination"""
+    session.pop("dest_id", default=None)
     if request.method == "GET":
         return redirect("/dest")
     else:
@@ -296,10 +299,11 @@ def dest_delete():
 @login_required
 def ideas():
     """Ideas page for selected destination"""
-    if request.method == "POST" or (request.method == "GET" and  request.args.get('dest_id')):
+    # Check if pafe
+    if request.method == "POST" or session.get("dest_id"):
         action = request.form.get("action")
         user_id = session["user_id"]
-        dest_id = request.form.get("dest_id") or request.args.get('dest_id')
+        dest_id = request.form.get("dest_id") or session["dest_id"]
         if action == "add":
             args = {
                 "user_id": user_id,
@@ -348,15 +352,25 @@ def idea_edit():
             "notes": request.form.get("notes"),
             "link": request.form.get("link"),
             "map_link": request.form.get("map_link"),
-            "day": request.form.get("day"),
             "completed": False,
         }
         # Check for required input - description must be provided
         if not args["description"]:
             return apology("Must provide description", 403)
-        with engine.begin as db:
-            
-        return redirect(url_for('ideas', dest_id=args["dest_id"]))
+        # Update db record 
+        with engine.begin() as db:
+            db.execute(
+                update(ideas_table)
+                .where(
+                    and_(
+                        ideas_table.c.user_id == args["user_id"],
+                        ideas_table.c.id == request.form.get("idea_id"),
+                    )
+                )
+                .values(args)  # type: ignore
+            )
+        session["dest_id"]=args["dest_id"]
+        return redirect(url_for("ideas"))
 
 
 if __name__ == "__main__":

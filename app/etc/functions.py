@@ -187,13 +187,16 @@ def day_delete(user_id, dest_id, day_to_remove):
         # Iterate through the ideas for the days after deleted one and move them up (decrement a day)
         for day in range(day_to_remove, days + 1):
             db.execute(
-                update(ideas_table).where(
+                update(ideas_table)
+                .where(
                     and_(
                         ideas_table.c.user_id == user_id,
                         ideas_table.c.dest_id == dest_id,
                         ideas_table.c.day == day,
-                    )).values(day=day - 1)
+                    )
                 )
+                .values(day=day - 1)
+            )
 
         # Update a record for amount of days in db
         # Check - do not delete the last day
