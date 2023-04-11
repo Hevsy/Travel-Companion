@@ -31,10 +31,15 @@ Ideas
                     aria-labelledby="dropdownMenuLink">
                     <div class="dropdown-header text-l text-gray-600">Day:</div>
                     <li>
-                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
-                            <i class="fa-solid fa-arrow-up fa-sm text-gray-800"></i>
-                            Move up
-                        </a>
+                        <form action="/move_day_up" method="post" role="form">
+                            <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
+                            <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
+                            <button class="dropdown-item text-gray-800" tabindex="-1" aria-disabled="true"
+                                type="submit">
+                                <i class="fa-solid fa-arrow-up fa-sm text-gray-800"></i>
+                                Move up
+                            </button>
+                        </form>
                     </li>
                     <li>
                         <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
@@ -135,15 +140,14 @@ Ideas
                                                     <label for="description"
                                                         class="form-label text-black">Description</label>
                                                     <input autofocus class="form-control w-100" id="description"
-                                                        name="description"
-                                                        placeholder="Describe idea/place" value="{{ idea['description'] }}"
-                                                        type="text">
+                                                        name="description" placeholder="Describe idea/place"
+                                                        value="{{ idea['description'] }}" type="text">
                                                 </div>
                                                 <div class="mb-2">
                                                     <label for="notes" class="form-label text-black">Notes</label>
                                                     <input class="form-control w-100" id="notes" name="notes"
-                                                        placeholder="Notes (optional)"
-                                                        type="text" value="{{ idea['notes'] or '' }}">
+                                                        placeholder="Notes (optional)" type="text"
+                                                        value="{{ idea['notes'] or '' }}">
                                                 </div>
                                                 <div class="mb-2">
                                                     <label for="link" class="form-label text-black">Link</label>

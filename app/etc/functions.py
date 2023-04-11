@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import redirect, render_template, session
 from werkzeug.security import generate_password_hash
-from sqlalchemy import and_, delete, insert, select, update
+from sqlalchemy import and_, case, delete, insert, select, update
 
 
 def apology(message, code=400):
@@ -71,7 +71,7 @@ def get_dest_by_id(dest_id, user_id):
                 )
             )
         ).all()[0]
-        return dest
+        return dest._asdict
 
 
 def get_ideas(dest_id, user_id):
@@ -212,11 +212,24 @@ def day_delete(user_id, dest_id, day_to_remove):
 
 def move_day(user_id, dest_id, day, step):
     """Moves the day up or down"""
-    from app.app import engine, ideas_table
+    from app.app import engine, ideas_table, destinations_table
 
     with engine.begin() as db:
-        ideas = get_ideas(dest_id, user_id)
-        for idea in ideas:
-            delete_idea(user_id, dest_id, idea["id"])
-
+        dest = get_dest_by_id(dest_id, user_id)
+        days = dest["days"]
+        if int(day) == 1 or day == days:
+            return
+        db.execute(
+            update(ideas_table)
+            .where(
+                and_(ideas_table.c.user_id == user_id, ideas_table.c.dest_id == dest_id)
+            )
+            .values(
+                day=case(
+                    (ideas_table.c.day == day, int(day) + int(step)),
+                    (ideas_table.c.day == int(day) + int(step), day),
+                    else_=ideas_table.c.day,
+                )
+            )
+        )
         return
