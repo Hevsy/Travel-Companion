@@ -71,7 +71,7 @@ def get_dest_by_id(dest_id, user_id):
                 )
             )
         ).all()[0]
-        return dest._asdict
+        return dest._asdict()
 
 
 def get_ideas(dest_id, user_id):
@@ -217,7 +217,7 @@ def move_day(user_id, dest_id, day, step):
     with engine.begin() as db:
         dest = get_dest_by_id(dest_id, user_id)
         days = dest["days"]
-        if int(day) == 1 or day == days:
+        if int(day) + int(step) < 1 or int(day) + int(step) > days:
             return
         db.execute(
             update(ideas_table)
