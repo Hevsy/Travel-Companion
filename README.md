@@ -8,6 +8,8 @@
 Aplication allows users to create notebooks for they travel plans, to store ideas ideas, places of interest and links organised by the destinations 
 Application is being designed to run in the containers on AWS Infrasctuture
 
+Repository also contains CI/CD pipeine built with github actions, that perform unit tests of the application and deploys it to a docker container/repository
+
 ## AWS services to be used
 
 * Amazon Virtual Private Cloud (VPC) for creating an isolated virtual network for the resources
