@@ -1,9 +1,9 @@
 # Travel Companion
 **Final Project for CS50x Course**
 
-** A web app for storing travel plans and activities
+**A web app for storing travel plans and activities**
 
-*Build with Flask, SQLALchemy, MySQL, HTML/CSS and JavaScript **
+*Build with Flask, SQLALchemy, MySQL, HTML/CSS and JavaScript*
 
 Aplication allows users to create notebooks for they travel plans, to store ideas ideas, places of interest and links organised by the destinations 
 Application is being designed to run in the containers on AWS Infrasctuture
