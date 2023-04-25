@@ -212,13 +212,15 @@ def day_delete(user_id, dest_id, day_to_remove):
 
 def move_day(user_id, dest_id, day, step):
     """Moves the day up or down"""
-    from app.app import engine, ideas_table, destinations_table
+    from app.app import engine, ideas_table
 
     with engine.begin() as db:
         dest = get_dest_by_id(dest_id, user_id)
         days = dest["days"]
+        # Check if we're moving first day up or last day down - then do nothing
         if int(day) + int(step) < 1 or int(day) + int(step) > days:
             return
+        # Swap the days (eg move them)  
         db.execute(
             update(ideas_table)
             .where(

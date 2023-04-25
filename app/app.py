@@ -300,7 +300,7 @@ def dest_delete():
 @login_required
 def ideas():
     """Ideas page for selected destination"""
-    # Check if pafe
+    # Check if page has been accessed via POST or whether dest_id is stored in the session
     if request.method == "POST" or session.get("dest_id"):
         action = request.form.get("action")
         user_id = session["user_id"]
@@ -377,7 +377,8 @@ def idea_edit():
 @app.route("/move_day_up", methods=["GET", "POST"])
 @login_required
 def move_day_up():
-    """Edit specified idea"""
+    """Move day up in the schedule"""
+    # Require that function accessed via POST
     if request.method != "POST":
         return redirect("/dest")
     else:
@@ -385,6 +386,24 @@ def move_day_up():
         dest_id = request.form.get("dest_id")
         day = request.form.get("day")
         move_day(user_id, dest_id, day, -1)
+        # Save dest_id to session so /ideas knows what destination to render
+        session["dest_id"] = dest_id
+        return redirect("/ideas")
+
+
+@app.route("/move_day_down", methods=["GET", "POST"])
+@login_required
+def move_day_daown():
+    """Move day down in the schedule"""
+    # Require that function accessed via POST
+    if request.method != "POST":
+        return redirect("/dest")
+    else:
+        user_id = session["user_id"]
+        dest_id = request.form.get("dest_id")
+        day = request.form.get("day")
+        move_day(user_id, dest_id, day, 1)
+        # Save dest_id to session so /ideas knows what destination to render
         session["dest_id"] = dest_id
         return redirect("/ideas")
 
