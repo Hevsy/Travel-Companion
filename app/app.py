@@ -230,10 +230,12 @@ def dest_edit():
         action = request.form.get("action")
         dest_id = str(request.form.get("dest_id"))
         user_id = session["user_id"]
+        # Call action renders a page with a form for editing destination
         if action == "call":
             with engine.begin() as db:
                 dest_data = get_dest_by_id(dest_id, user_id)
                 return render_template("dest-edit.html", data=dest_data)
+        # Edit action is the result of submitting edit destination form - updates DB with the provided input
         elif action == "edit":
             # Create a list of arguments for SQLALchemy
             args = {
@@ -241,9 +243,11 @@ def dest_edit():
                 "country": request.form.get("country"),
                 "year": request.form.get("year"),
             }
+            # Check for required input
             if not args["name"]:
                 return apology("Must provide name", 403)
             args = strip_args(args)
+            # Update DB
             with engine.begin() as db:
                 db.execute(
                     update(destinations_table)
@@ -265,10 +269,11 @@ def dest_edit():
 @login_required
 def dest_delete():
     """Deleting destination"""
-    session.pop("dest_id", default=None)
     if request.method == "GET":
         return redirect("/dest")
     else:
+        # Clear dest_id from session
+        session.pop("dest_id", default=None)
         user_id = session["user_id"]
         dest_id = request.form.get("dest_id")
         # Delete all ideas related to this destination first
@@ -305,6 +310,7 @@ def ideas():
         action = request.form.get("action")
         user_id = session["user_id"]
         dest_id = request.form.get("dest_id") or session["dest_id"]
+        # Add idea
         if action == "add":
             args = {
                 "user_id": user_id,
@@ -324,18 +330,22 @@ def ideas():
             with engine.begin() as db:
                 # Add the idea to the db
                 db.execute(insert(ideas_table).values(args))  # type: ignore
+        # Delete idea
         elif action == "delete":
             idea_id = request.form.get("idea_id")
             if not dest_id or not id:
                 return apology("Invalid input", 400)
             delete_idea(user_id, dest_id, idea_id)
+        # Add a day to the schedule
         elif action == "day_add":
             day_add(user_id, dest_id)
+        # Delete a day from the schedule
         elif action == "day_delete":
             day = int(request.form.get("day"))  # type: ignore
             day_delete(user_id, dest_id, day)
         return render_ideas(user_id, dest_id)
     else:
+        # If not accesed via POST or no dest_id stored in the session - return to main page
         return redirect("/dest")
 
 
@@ -346,6 +356,7 @@ def idea_edit():
     if request.method != "POST":
         return redirect("/dest")
     else:
+        # Get all the arguments from session and request and put them into dictionary
         args = {
             "user_id": session["user_id"],
             "dest_id": request.form.get("dest_id"),
@@ -385,6 +396,7 @@ def move_day_up():
         user_id = session["user_id"]
         dest_id = request.form.get("dest_id")
         day = request.form.get("day")
+        # Move day by -1
         move_day(user_id, dest_id, day, -1)
         # Save dest_id to session so /ideas knows what destination to render
         session["dest_id"] = dest_id
@@ -402,6 +414,7 @@ def move_day_daown():
         user_id = session["user_id"]
         dest_id = request.form.get("dest_id")
         day = request.form.get("day")
+        # Move day by +1
         move_day(user_id, dest_id, day, 1)
         # Save dest_id to session so /ideas knows what destination to render
         session["dest_id"] = dest_id

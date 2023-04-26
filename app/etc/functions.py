@@ -220,7 +220,7 @@ def move_day(user_id, dest_id, day, step):
         # Check if we're moving first day up or last day down - then do nothing
         if int(day) + int(step) < 1 or int(day) + int(step) > days:
             return
-        # Swap the days (eg move them)  
+        # Swap the days (eg move all the ideas recorded for that day to a target day and vice versa)  
         db.execute(
             update(ideas_table)
             .where(

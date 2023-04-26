@@ -42,10 +42,15 @@ Ideas
                         </form>
                     </li>
                     <li>
-                        <a class="dropdown-item disabled text-gray-800" href="#" tabindex="-1" aria-disabled="true">
-                            <i class="fa-solid fa-arrow-down fa-sm text-gray-800"></i>
-                            Move down
-                        </a>
+                        <form action="/move_day_down" method="post" role="form">
+                            <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
+                            <input type="hidden" type="text" id="dest_id" name="dest_id" value="{{ dest_data['id'] }}">
+                            <button class="dropdown-item text-gray-800" tabindex="-1" aria-disabled="true"
+                                type="submit">
+                                <i class="fa-solid fa-arrow-down fa-sm text-gray-800"></i>
+                                Move down
+                            </button>
+                        </form>
                     </li>
                     <div class="dropdown-divider"></div>
                     <li>
