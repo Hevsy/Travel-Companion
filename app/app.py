@@ -449,5 +449,4 @@ def dest_complete():
                 .values(completed=complete)
             )
             db.commit()
-        # Delete a destination record
         return redirect("/dest")
