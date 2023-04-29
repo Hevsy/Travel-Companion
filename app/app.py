@@ -333,7 +333,7 @@ def ideas():
         # Delete idea
         elif action == "delete":
             idea_id = request.form.get("idea_id")
-            if not dest_id or not id:
+            if not dest_id or not dest_id:
                 return apology("Invalid input", 400)
             delete_idea(user_id, dest_id, idea_id)
         # Add a day to the schedule
@@ -344,9 +344,8 @@ def ideas():
             day = int(request.form.get("day"))  # type: ignore
             day_delete(user_id, dest_id, day)
         return render_ideas(user_id, dest_id)
-    else:
-        # If not accesed via POST or no dest_id stored in the session - return to main page
-        return redirect("/dest")
+    # If not accesed via POST or no dest_id stored in the session - return to main page
+    return redirect("/dest")
 
 
 @app.route("/idea_edit", methods=["GET", "POST"])
@@ -423,3 +422,32 @@ def move_day_daown():
 
 if __name__ == "__main__":
     app.run()
+
+
+@app.route("/dest-complete", methods=["GET", "POST"])
+@login_required
+def dest_complete():
+    """Mark destination as complete/incomplete"""
+    if request.method == "GET":
+        return redirect("/dest")
+    else:
+        # Clear dest_id from session
+        session.pop("dest_id", default=None)
+        user_id = session["user_id"]
+        dest_id = request.form.get("dest_id")
+        complete = True if request.form.get("complete") == 1 else False
+        # Update DB to mark destination as complete
+        with engine.begin() as db:
+            db.execute(
+                update(destinations_table)
+                .where(
+                    and_(
+                        destinations_table.c.user_id == user_id,
+                        destinations_table.c.id == dest_id,
+                    )
+                )
+                .values(completed=complete)
+            )
+            db.commit()
+        # Delete a destination record
+        return redirect("/dest")

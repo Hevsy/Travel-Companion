@@ -1,9 +1,9 @@
-import app.app as app
 import unittest
-from flask import session
 import sys
-from os import getcwd
 import logging
+from os import getcwd
+from flask import session
+import app.app as app
 
 sys.path.append("./app/*")
 print(sys.path)
