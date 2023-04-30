@@ -435,7 +435,10 @@ def dest_complete():
         session.pop("dest_id", default=None)
         user_id = session["user_id"]
         dest_id = request.form.get("dest_id")
-        complete = True if request.form.get("complete") == 1 else False
+        try:
+            complete = bool(request.form.get("complete"))
+        except:
+            return apology("Invalid input", 403)
         # Update DB to mark destination as complete
         with engine.begin() as db:
             db.execute(

@@ -31,6 +31,6 @@ with engine.begin() as db:
                 destinations_table.c.id == dest_id,
             )
         ).fetchone()
-        dest_dict = dest._asdict()
+        dest_dict = dest._asdict() # type: ignore
         print(dest_dict)
         print(dest_dict["id"])
