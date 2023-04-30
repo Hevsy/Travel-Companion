@@ -33,7 +33,7 @@ Destinations
         </a>
     </div>
     {% if not_empty %}
-    {% for row in destinations | sort(attribute="year") if not row['completed'] %}
+    {% for row in destinations if not row['completed'] %}
     <div class="col-xl-3 col-md-6 mb-4">
         <!-- Card showing a destination -->
         <div class="card shadow">
@@ -111,13 +111,13 @@ Destinations
         </div>
     </div>
     {% endfor %}
-    {% for row in destinations | sort(attribute="year") if row['completed'] %}
+    {% for row in destinations if row['completed'] %}
     <div class="col-xl-3 col-md-6 mb-4">
         <!-- Card showing a destination -->
         <div class="card shadow">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-bg-secondary ">{{ row['name'] }}</h6>
+                <h6 class="m-0 font-weight-bold text-bg-secondary text-gray-500"><del>{{ row['name'] }}</del>   - Finished</h6>
                 <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">

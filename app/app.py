@@ -203,15 +203,19 @@ def dest_add():
         return render_template("dest-add.html")
     else:
         # Create a list of arguments for SQLALchemy
-        args = {
-            "user_id": session["user_id"],
-            "name": request.form.get("name"),
-            "country": request.form.get("country"),
-            "year": request.form.get("year"),
-        }
+        try:
+            args = {
+                "user_id": session["user_id"],
+                "name": request.form.get("name"),
+                "country": request.form.get("country"),
+                "year": request.form.get("year"),
+            }
+        except:
+            return apology("Invalid input", 400)
         # Check for required input - name must be provided
         if not args["name"]:
             return apology("Must provide name", 403)
+        args = strip_args(args)
         with engine.begin() as db:
             db.execute(insert(destinations_table).values(args))  # type: ignore
             db.commit()
@@ -433,12 +437,12 @@ def dest_complete():
     else:
         # Clear dest_id from session
         session.pop("dest_id", default=None)
-        user_id = session["user_id"]
-        dest_id = request.form.get("dest_id")
         try:
-            complete = bool(request.form.get("complete"))
+            user_id = int(session["user_id"])
+            dest_id = int(request.form.get("dest_id"))  # type: ignore
+            complete = bool(int(request.form.get("complete")))  # type: ignore
         except:
-            return apology("Invalid input", 403)
+            return apology("Invalid input", 400)
         # Update DB to mark destination as complete
         with engine.begin() as db:
             db.execute(
