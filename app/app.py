@@ -457,3 +457,38 @@ def dest_complete():
             )
             db.commit()
         return redirect("/dest")
+
+
+@app.route("/idea-complete", methods=["GET", "POST"])
+@login_required
+def idea_complete():
+    """Marks idea as complete or incomplete"""
+    if request.method != "POST":
+        return redirect("/dest")
+    else:
+        # Get all the arguments from session and request and put them into dictionary
+        try:
+            args = {
+                "user_id": int(session["user_id"]),
+                "dest_id": int(request.form.get("dest_id")),  # type: ignore
+                "completed": bool(int(request.form.get("complete"))),  # type: ignore
+            }
+        except:
+            return apology("Invalid input", 400)
+        # Check for required input - description must be provided
+        if not args["description"]:
+            return apology("Must provide description", 403)
+        # Update db record
+        with engine.begin() as db:
+            db.execute(
+                update(ideas_table)
+                .where(
+                    and_(
+                        ideas_table.c.user_id == args["user_id"],
+                        ideas_table.c.id == request.form.get("idea_id"),
+                    )
+                )
+                .values(args)  # type: ignore
+            )
+        session["dest_id"] = args["dest_id"]
+        return redirect("/ideas")
