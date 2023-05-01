@@ -213,9 +213,10 @@ Ideas
                     </div>
                 </div>
                 {% endfor %}
+                {% if ideas_data|selectattr('completed','equalto', True) | list %}
+                <div>Finished:</div>
                 {% for idea in ideas_data if idea['day'] == day and idea['completed']%}
-                <div class="col font-weight-bold text-gray-600"> Finished: </div>
-                <div class="card bg-gray-400 shadow-sm no-gutters align-content-start m-1 p-1">
+                <div class="card bg-gray-200 shadow-sm no-gutters align-content-start m-1 p-1">
                     <div class="d-flex flex-row align-items-center justify-content-between">
                         <div class="col my-1 pl-4 font-weight-bold"><del>{{ idea['description'] or ''}}</del>
                         </div>
@@ -232,10 +233,11 @@ Ideas
                                 target="_blank" rel="noopener noreferrer">Map</a>
                         </div>
                         {% endif %}
+                        <div class="col font-weight-bold text-gray-600"> - Finished </div>
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-100"></i>
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                 aria-labelledby="dropdownMenuLink">
@@ -361,6 +363,7 @@ Ideas
                     </div>
                 </div>
                 {% endfor %}
+                {% endif %}
                 <div class="col">
                     <div class="row align-items-center">
                         <a href="#"
