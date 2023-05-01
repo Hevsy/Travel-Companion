@@ -215,7 +215,7 @@ Ideas
                 {% endfor %}
                 {% for idea in ideas_data if idea['day'] == day and idea['completed']%}
                 <div class="col font-weight-bold text-gray-600"> Finished: </div>
-                <div class="card bg-gray-500 shadow-sm no-gutters align-content-start m-1 p-1">
+                <div class="card bg-gray-400 shadow-sm no-gutters align-content-start m-1 p-1">
                     <div class="d-flex flex-row align-items-center justify-content-between">
                         <div class="col my-1 pl-4 font-weight-bold"><del>{{ idea['description'] or ''}}</del>
                         </div>
@@ -235,7 +235,7 @@ Ideas
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-100"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                 aria-labelledby="dropdownMenuLink">
