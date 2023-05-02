@@ -213,156 +213,156 @@ Ideas
                     </div>
                 </div>
                 {% endfor %}
-                {% if ideas_data|selectattr('completed','equalto', True) | list %}
+
+                {% if ideas_data|selectattr('completed','equalto', True)|selectattr('day','equalto', day)|list|length > 0 %}
                 <div>Finished:</div>
-                {% for idea in ideas_data if idea['day'] == day and idea['completed']%}
-                <div class="card bg-gray-200 shadow-sm no-gutters align-content-start m-1 p-1">
-                    <div class="d-flex flex-row align-items-center justify-content-between">
-                        <div class="col my-1 pl-4 font-weight-bold"><del>{{ idea['description'] or ''}}</del>
-                        </div>
-                        <div class="col my-1 small"><del>{{ idea['notes'] or ''}}</del></div>
-                        {% if idea['link'] %}
-                        <div class="col">
-                            <a class="btn btn-secondary btn-sm shadow-sm font-weight-bold" href="{{ idea['link'] }}"
-                                target="_blank" rel="noopener noreferrer">Link</a>
-                        </div>
-                        {% endif %}
-                        {% if idea['map-link'] %}
-                        <div class="col">
-                            <a class="btn btn-secondary btn-sm shadow-sm font-weight-bold" href="{{ idea['map-link'] }}"
-                                target="_blank" rel="noopener noreferrer">Map</a>
-                        </div>
-                        {% endif %}
-                        <div class="col font-weight-bold text-gray-600"> - Finished </div>
-                        <div class="dropdown no-arrow">
-                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                aria-labelledby="dropdownMenuLink">
-                                <div class="dropdown-header text-l text-gray-600">Day:</div>
-                                <li>
-                                    <a class="dropdown-item text-gray-800" tabindex="-1" data-bs-toggle="modal"
-                                        data-bs-target="#EditIdeaModal{{ idea['id'] }}" aria-disabled="true">
-                                        <i class="fa-solid fa-pen-to-square fa-sm text-gray-800"></i>
-                                        Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <form action="/idea-complete" method="post" role="form">
-                                        <input type="hidden" type="text" id="dest_id" name="dest_id"
-                                            value="{{ dest_data['id'] }}">
-                                        <input type="hidden" type="text" id="complete" name="complete" value="0">
-                                        <input type="hidden" type="text" id="idea_id" name="idea_id"
-                                            value="{{ idea['id'] }}">
-                                        <button class="dropdown-item" type="submit">
-                                            <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
-                                            Un-mark as complete
-                                        </button>
-                                    </form>
-                                </li>
-                                <div class="dropdown-divider"></div>
-                                <li>
-                                    <a class="dropdown-item text-gray-800" tabindex="-1" data-bs-toggle="modal"
-                                        data-bs-target="#DeleteIdeaModal{{ idea['id'] }}" aria-disabled="true">
-                                        <i class="fa-solid fa-trash fa-sm text-gray-800"></i>
-                                        Delete
-                                    </a>
-                                </li>
-                            </ul>
+                    {% for idea in ideas_data if idea['day'] == day and idea['completed']%}
+                    <div class="card bg-gray-200 shadow-sm no-gutters align-content-start m-1 p-1">
+                        <div class="d-flex flex-row align-items-center justify-content-between">
+                            <div class="col my-1 pl-4 font-weight-bold"><del>{{ idea['description'] or ''}}</del>
+                            </div>
+                            <div class="col my-1 small"><del>{{ idea['notes'] or ''}}</del></div>
+                            {% if idea['link'] %}
+                            <div class="col">
+                                <a class="btn btn-secondary btn-sm shadow-sm font-weight-bold" href="{{ idea['link'] }}"
+                                    target="_blank" rel="noopener noreferrer">Link</a>
+                            </div>
+                            {% endif %}
+                            {% if idea['map-link'] %}
+                            <div class="col">
+                                <a class="btn btn-secondary btn-sm shadow-sm font-weight-bold" href="{{ idea['map-link'] }}"
+                                    target="_blank" rel="noopener noreferrer">Map</a>
+                            </div>
+                            {% endif %}
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header text-l text-gray-600">Day:</div>
+                                    <li>
+                                        <a class="dropdown-item text-gray-800" tabindex="-1" data-bs-toggle="modal"
+                                            data-bs-target="#EditIdeaModal{{ idea['id'] }}" aria-disabled="true">
+                                            <i class="fa-solid fa-pen-to-square fa-sm text-gray-800"></i>
+                                            Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form action="/idea-complete" method="post" role="form">
+                                            <input type="hidden" type="text" id="dest_id" name="dest_id"
+                                                value="{{ dest_data['id'] }}">
+                                            <input type="hidden" type="text" id="complete" name="complete" value="0">
+                                            <input type="hidden" type="text" id="idea_id" name="idea_id"
+                                                value="{{ idea['id'] }}">
+                                            <button class="dropdown-item" type="submit">
+                                                <i class="fa-regular fa-square-check fa-sm text-gray-600"></i>
+                                                Un-mark as complete
+                                            </button>
+                                        </form>
+                                    </li>
+                                    <div class="dropdown-divider"></div>
+                                    <li>
+                                        <a class="dropdown-item text-gray-800" tabindex="-1" data-bs-toggle="modal"
+                                            data-bs-target="#DeleteIdeaModal{{ idea['id'] }}" aria-disabled="true">
+                                            <i class="fa-solid fa-trash fa-sm text-gray-800"></i>
+                                            Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Edit idea modal dialog-->
-                <div class="modal fade" id="EditIdeaModal{{ idea['id'] }}" tabindex="-1" role="dialog"
-                    aria-labelledby="LabelDeleteModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <form action="/idea_edit" method="post">
-                                <input type="hidden" type="text" id="action" name="action" value="edit">
-                                <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
-                                <input type="hidden" type="text" id="dest_id" name="dest_id"
-                                    value="{{ dest_data['id'] }}">
-                                <input type="hidden" type="text" id="idea_id" name="idea_id" value="{{ idea['id'] }}">
+                    <!-- Edit idea modal dialog-->
+                    <div class="modal fade" id="EditIdeaModal{{ idea['id'] }}" tabindex="-1" role="dialog"
+                        aria-labelledby="LabelDeleteModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form action="/idea_edit" method="post">
+                                    <input type="hidden" type="text" id="action" name="action" value="edit">
+                                    <input type="hidden" type="text" id="day" name="day" value="{{ day }}">
+                                    <input type="hidden" type="text" id="dest_id" name="dest_id"
+                                        value="{{ dest_data['id'] }}">
+                                    <input type="hidden" type="text" id="idea_id" name="idea_id" value="{{ idea['id'] }}">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="LabelDeleteModal">Edit idea</h5>
+                                        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">x</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    </div>
+                                    <div class="card shadow p-2 m-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="mb-2">
+                                                        <label for="description"
+                                                            class="form-label text-black">Description</label>
+                                                        <input autofocus class="form-control w-100" id="description"
+                                                            name="description" placeholder="Describe idea/place"
+                                                            value="{{ idea['description'] }}" type="text">
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label for="notes" class="form-label text-black">Notes</label>
+                                                        <input class="form-control w-100" id="notes" name="notes"
+                                                            placeholder="Notes (optional)" type="text"
+                                                            value="{{ idea['notes'] or '' }}">
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label for="link" class="form-label text-black">Link</label>
+                                                        <input class="form-control w-100" id="link" name="link"
+                                                            placeholder="Paste a link to a webpage or google for this idea"
+                                                            type="text" value="{{ idea['link'] or '' }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                        <button class="btn btn-primary" type="submit">Edit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Delete Idea Modal Window-->
+                    <div class="modal fade" id="DeleteIdeaModal{{ idea['id'] }}" tabindex="-1" role="dialog"
+                        aria-labelledby="LabelDeleteModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="LabelDeleteModal">Edit idea</h5>
+                                    <h5 class="modal-title" id="LabelDeleteModal">Please confirm</h5>
                                     <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">x</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                </div>
-                                <div class="card shadow p-2 m-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="mb-2">
-                                                    <label for="description"
-                                                        class="form-label text-black">Description</label>
-                                                    <input autofocus class="form-control w-100" id="description"
-                                                        name="description" placeholder="Describe idea/place"
-                                                        value="{{ idea['description'] }}" type="text">
-                                                </div>
-                                                <div class="mb-2">
-                                                    <label for="notes" class="form-label text-black">Notes</label>
-                                                    <input class="form-control w-100" id="notes" name="notes"
-                                                        placeholder="Notes (optional)" type="text"
-                                                        value="{{ idea['notes'] or '' }}">
-                                                </div>
-                                                <div class="mb-2">
-                                                    <label for="link" class="form-label text-black">Link</label>
-                                                    <input class="form-control w-100" id="link" name="link"
-                                                        placeholder="Paste a link to a webpage or google for this idea"
-                                                        type="text" value="{{ idea['link'] or '' }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    Click "Delete" below to permanently delete this record
+                                    <p class="text-danger">Warning! The data will be permanently deleted and couldn't be
+                                        restored!</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
                                         Cancel
                                     </button>
-                                    <button class="btn btn-primary" type="submit">Edit</button>
+                                    <form action="/ideas" method="post" role="form">
+                                        <input type="hidden" type="text" id="action" name="action" value="delete">
+                                        <input type="hidden" type="text" id="idea_id" name="idea_id"
+                                            value="{{ idea['id'] }}">
+                                        <input type="hidden" type="text" id="dest_id" name="dest_id"
+                                            value="{{ dest_data['id'] }}">
+                                        <button class="btn btn-primary" type="submit">Delete</button>
+                                    </form>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Delete Idea Modal Window-->
-                <div class="modal fade" id="DeleteIdeaModal{{ idea['id'] }}" tabindex="-1" role="dialog"
-                    aria-labelledby="LabelDeleteModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="LabelDeleteModal">Please confirm</h5>
-                                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">x</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                Click "Delete" below to permanently delete this record
-                                <p class="text-danger">Warning! The data will be permanently deleted and couldn't be
-                                    restored!</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                                    Cancel
-                                </button>
-                                <form action="/ideas" method="post" role="form">
-                                    <input type="hidden" type="text" id="action" name="action" value="delete">
-                                    <input type="hidden" type="text" id="idea_id" name="idea_id"
-                                        value="{{ idea['id'] }}">
-                                    <input type="hidden" type="text" id="dest_id" name="dest_id"
-                                        value="{{ dest_data['id'] }}">
-                                    <button class="btn btn-primary" type="submit">Delete</button>
-                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
                 {% endif %}
                 <div class="col">
                     <div class="row align-items-center">
