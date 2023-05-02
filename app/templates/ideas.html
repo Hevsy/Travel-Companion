@@ -216,12 +216,12 @@ Ideas
 
                 {% if ideas_data|selectattr('completed','equalto', True)|selectattr('day','equalto', day)|list|length > 0 %}
                 <div>Finished:</div>
-                    {% for idea in ideas_data if idea['day'] == day and idea['completed']%}
+                    {% for idea in ideas_data if idea['day'] == day and idea['completed'] %}
                     <div class="card bg-gray-200 shadow-sm no-gutters align-content-start m-1 p-1">
                         <div class="d-flex flex-row align-items-center justify-content-between">
                             <div class="col my-1 pl-4 font-weight-bold"><del>{{ idea['description'] or ''}}</del>
                             </div>
-                            <div class="col my-1 small"><del>{{ idea['notes'] or ''}}</del></div>
+                            <div class="col my-1 small"><del>{{ idea['notes'] or '' }}</del></div>
                             {% if idea['link'] %}
                             <div class="col">
                                 <a class="btn btn-secondary btn-sm shadow-sm font-weight-bold" href="{{ idea['link'] }}"
