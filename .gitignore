@@ -10,3 +10,4 @@ TC.session.sql
 .mypy*
 .github
 finance.db
+.env
