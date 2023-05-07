@@ -9,7 +9,7 @@
 #     return (ssm.get_parameter(Name=param_name, WithDecryption=True))['Parameter']['Value']
 
 
-db_config_1 = {
+db_config = {
     "type": "mysql+mysqldb",
     "username": "root",
     "pass": "root",
@@ -17,10 +17,10 @@ db_config_1 = {
     "db": "project-tc",
 }
 
-db_config = {
+db_config_test = {
     "type": "sqlite",
     "username": None,
     "pass": None,
     "host": None,
-    "db": "finance.db",
+    "db": "project-tc.db",
 }
