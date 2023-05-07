@@ -16,6 +16,7 @@ from .etc.functions import (
     render_ideas,
     strip_args,
 )
+from .etc.config import env
 
 # from sys import stdout, stderr # - used for print() when debugging
 
@@ -25,9 +26,10 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# Debug and test mode enabled - REMOVE WHEN DEPLOYED!
-app.debug = True
-app.testing = True
+# Debug and test mode enabled for Development and Test enviromnents only
+if env == "DEV" or "TEST":
+    app.debug = True
+    app.testing = True
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -470,7 +472,7 @@ def idea_complete():
         try:
             user_id = int(session["user_id"])
             idea_id = int(request.form.get("idea_id"))  # type: ignore
-            dest_id = int(request.form.get("dest_id"))   # type: ignore
+            dest_id = int(request.form.get("dest_id"))  # type: ignore
             complete = bool(int(request.form.get("complete")))  # type: ignore
         except:
             return apology("Invalid input", 400)
