@@ -36,6 +36,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r app/requirements.txt
           pip install boto3
+      - name: Setup Environment variables
+        run:
+          export STAGE=TEST
+          export USERNAME=root
+          export PASS=root
+          export HOST=localhost
       - name: Test with unittest
         run: |
           python -m unittest discover -s ./test  -p 'test*.py'
