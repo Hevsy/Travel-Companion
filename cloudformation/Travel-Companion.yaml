@@ -22,20 +22,20 @@ Parameters:
     Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
 
 Resources:
-  FinalProjectVPC:
+  TravComVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: FinalProjectVPC
+          Value: TravComVPC
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [0, !GetAZs ]
-      VpcId: !Ref FinalProjectVPC
+      VpcId: !Ref TravComVPC
       CidrBlock: 10.0.1.0/24
       Tags:
         - Key: Name
@@ -45,7 +45,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [1, !GetAZs ]
-      VpcId: !Ref FinalProjectVPC
+      VpcId: !Ref TravComVPC
       CidrBlock: 10.0.2.0/24
       Tags:
         - Key: Name
@@ -55,7 +55,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [0, !GetAZs ]
-      VpcId: !Ref FinalProjectVPC
+      VpcId: !Ref TravComVPC
       CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: true
       Tags:
@@ -66,30 +66,30 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [1, !GetAZs ]
-      VpcId: !Ref FinalProjectVPC
+      VpcId: !Ref TravComVPC
       CidrBlock: 10.0.4.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
           Value: PublicSubnet2
 
-  FinalProjectIGW:
+  TravComIGW:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: IGW-FinalProject
+          Value: IGW-TravCom
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref FinalProjectVPC
-      InternetGatewayId: !Ref FinalProjectIGW
+      VpcId: !Ref TravComVPC
+      InternetGatewayId: !Ref TravComIGW
 
   PublicRT:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref FinalProjectVPC
+      VpcId: !Ref TravComVPC
       Tags:
         - Key: Name
           Value: FinRT-public
@@ -100,7 +100,7 @@ Resources:
     Properties:
       RouteTableId: !Ref PublicRT
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref FinalProjectIGW
+      GatewayId: !Ref TravComIGW
 
   PublicRT1Association:
     Type: "AWS::EC2::SubnetRouteTableAssociation"
@@ -117,7 +117,7 @@ Resources:
   PrivateRT:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref FinalProjectVPC
+      VpcId: !Ref TravComVPC
       Tags:
         - Key: Name
           Value: FinRT-private
@@ -140,7 +140,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Enable HTTP and DNS(UDP) access on the inbound port
-      GroupName: FinalProject-WebServer-SG
+      GroupName: TravCom-WebServer-SG
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
@@ -152,14 +152,14 @@ Resources:
           CidrIp: 0.0.0.0/0      
       Tags:
           - Key: Name
-            Value: FinalProject-WebServer-SG
-      VpcId: !Ref FinalProjectVPC
+            Value: TravCom-WebServer-SG
+      VpcId: !Ref TravComVPC
     
   SSHSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Enable HTTP and DNS(UDP) access on the inbound port
-      GroupName: FinalProject-SSH-SG
+      GroupName: TravCom-SSH-SG
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -167,8 +167,8 @@ Resources:
           CidrIp: !Ref SSHLocation
       Tags:
           - Key: Name
-            Value: FinalProject-SSH-SG
-      VpcId: !Ref FinalProjectVPC
+            Value: TravCom-SSH-SG
+      VpcId: !Ref TravComVPC
 
   EC2toRDSSG:
     Type: AWS::EC2::SecurityGroup
@@ -177,8 +177,8 @@ Resources:
       GroupName: EC2-RDS-SG
       Tags:
           - Key: Name
-            Value: FinalProject-EC2-RDS-SG
-      VpcId: !Ref FinalProjectVPC
+            Value: TravCom-EC2-RDS-SG
+      VpcId: !Ref TravComVPC
 
   EC2toRDSegress:
     Type: AWS::EC2::SecurityGroupEgress
@@ -196,8 +196,8 @@ Resources:
       GroupName: RDS-EC2-SG
       Tags:
           - Key: Name
-            Value: FinalProject-RDS-EC2-SG
-      VpcId: !Ref FinalProjectVPC
+            Value: TravCom-RDS-EC2-SG
+      VpcId: !Ref TravComVPC
 
   RDStoEC2ingress:
     Type: AWS::EC2::SecurityGroupIngress
@@ -208,7 +208,7 @@ Resources:
       ToPort: 5432
       SourceSecurityGroupId: !Ref EC2toRDSSG
 
-  FinalProjectWebServer:
+  TravComWebServer:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref ImageId
@@ -221,37 +221,37 @@ Resources:
       SubnetId: !Ref PublicSubnet1
       Tags:
         - Key: Name
-          Value: FinalProject-WebServer
+          Value: TravCom-WebServer
 
 # RDS
   DBSubnetGroup1:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: Subnet group for db-FinalProject
-      DBSubnetGroupName: db-FinalProject-subnet-group
+      DBSubnetGroupDescription: Subnet group for db-TravCom
+      DBSubnetGroupName: db-TravCom-subnet-group
       SubnetIds: # Required
         - !Ref PrivateSubnet1
         - !Ref PrivateSubnet2
       Tags:
         - Key: Name
-          Value: db-FinalProject-subnet-group
+          Value: db-TravCom-subnet-group
         
-  FinalProjectDB:
+  TravComDB:
     Type: AWS::RDS::DBInstance
     Properties:
       AllocatedStorage: 20
-      DBName: FinalProject_db
+      DBName: TravCom_db
       VPCSecurityGroups:
         - !Ref RDStoEC2SG
       Engine: mysql
       DBSubnetGroupName: !Ref DBSubnetGroup1
       DBInstanceClass: db.t4g.micro
-      DBInstanceIdentifier: db-FinalProject1
+      DBInstanceIdentifier: db-TravCom1
       MasterUsername: root
       MasterUserPassword: root
       Tags:
         - Key: Name
-          Value: FinalProject_db
+          Value: TravCom_db
     DeletionPolicy: Retain
 
       # AutoMinorVersionUpgrade: false
