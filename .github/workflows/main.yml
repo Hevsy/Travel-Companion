@@ -39,10 +39,10 @@ jobs:
       - name: Setup Environment variables
         run:
           touch app/.env
-          echo export STAGE=TEST > app/.env
-          echo export USERNAME=root >> app/.env
-          echo export PASS=root >> app/.env
-          echo export HOST=localhost >> app/.env
+          echo STAGE=TEST > app/.env
+          echo USERNAME=root >> app/.env
+          echo PASS=root >> app/.env
+          echo HOST=localhost >> app/.env
       - name: Test with unittest
         run: |
           python -m unittest discover -s ./test  -p 'test*.py'
