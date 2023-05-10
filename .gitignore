@@ -8,5 +8,5 @@ venv/
 .vscode/
 TC.session.sql
 .mypy*
-finance.db
+project-tc.db
 .env
