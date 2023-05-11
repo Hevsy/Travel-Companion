@@ -37,7 +37,7 @@ jobs:
           pip install -r app/requirements.txt
           pip install boto3
       - name: Setup Environment variables
-        run:
+        run: |
           pwd
           touch etc/.env
           echo STAGE=TEST > etc/.env
