@@ -36,6 +36,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r app/requirements.txt
           pip install boto3
+          pip install cryptography
       - name: Setup Environment variables
         run: |
           pwd
