@@ -38,11 +38,12 @@ jobs:
           pip install boto3
       - name: Setup Environment variables
         run:
-          touch app/etc/.env
-          echo STAGE=TEST > app/etc/.env
-          echo USERNAME=root >> app/etc/.env
-          echo PASS=root >> app/etc/.env
-          echo HOST=localhost >> app/etc/.env
+          touch etc/.env
+          echo STAGE=TEST > etc/.env
+          echo USERNAME=root >> etc/.env
+          echo PASS=root >> etc/.env
+          echo HOST=localhost >> etc/.env
+        working-directory: app
       - name: Test with unittest
         run: |
           python -m unittest discover -s ./test  -p 'test*.py'
