@@ -7,6 +7,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      STAGE: TEST
+      USERNAME: root
+      PASS: root
+      HOST: localhost
+
     strategy:
       matrix:
         python: ["3.10"]
@@ -37,16 +43,6 @@ jobs:
           pip install -r app/requirements.txt
           pip install boto3
           pip install cryptography
-      - name: Setup Environment variables
-        run: |
-          pwd
-          touch etc/.env
-          echo STAGE=TEST > etc/.env
-          echo USERNAME=root >> etc/.env
-          echo PASS=root >> etc/.env
-          echo HOST=localhost >> etc/.env
-          cat etc/.env
-        working-directory: app
       - name: Test with unittest
         run: |
           python -m unittest discover -s ./test  -p 'test*.py'
