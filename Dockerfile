@@ -1,4 +1,4 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.10
+FROM tiangolo/meinheld-gunicorn:python3.9
 
 COPY ./requirements.txt /app/requirements.txt
 

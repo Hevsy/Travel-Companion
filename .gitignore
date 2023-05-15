@@ -4,9 +4,9 @@ flask_session/
 flask_session
 .a.py.swp
 venv/
-.vscode
-.vscode/
-TC.session.sql
+**/.vscode
+.vscode/*
+*.sql
 .mypy*
-project-tc.db
+*.db
 .env

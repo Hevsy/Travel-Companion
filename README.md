@@ -1,9 +1,8 @@
 # Travel Companion
-**Final Project for CS50x Course**
 
-**A web app for storing travel plans and activities**
+## A web app for storing travel plans and activities
 
-*Build with Flask, SQLALchemy, MySQL, HTML/CSS and JavaScript*
+### Built with Flask, SQLALchemy, MySQL, HTML/CSS and JavaScript
 
 Aplication allows users to create notebooks for they travel plans, to store ideas ideas, places of interest and links organised by the destinations 
 Application is being designed to run in the containers on AWS Infrasctuture
@@ -18,4 +17,3 @@ Repository also contains CI/CD pipeine built with github actions, that perform u
 * Amazon EC2 Container Registry (ECR) for storing Docker images
 * Amazon Elastic Load Balancer (ELB) for distributing traffic across containers
 * Amazon CloudWatch for monitoring the infrastructure and applications
-
