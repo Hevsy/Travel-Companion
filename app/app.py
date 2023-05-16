@@ -2,8 +2,8 @@ from flask import Flask, redirect, render_template, request, session
 from sqlalchemy import and_, delete, insert, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_session import Session
-from .etc.db_init import db_init
-from .etc.functions import (
+from etc.db_init import db_init
+from etc.functions import (
     apology,
     check_if_username_exists,
     day_add,
@@ -16,7 +16,7 @@ from .etc.functions import (
     render_ideas,
     strip_args,
 )
-from .etc.config import env
+from etc.config import env
 
 # from sys import stdout, stderr # - used for print() when debugging
 

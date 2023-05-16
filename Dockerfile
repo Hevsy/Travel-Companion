@@ -1,7 +1,8 @@
 FROM tiangolo/meinheld-gunicorn:python3.9
 
-COPY ./requirements.txt /app/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+ENV MODULE_NAME=app.app
+ENV STAGE=DEV
 
 COPY ./app /app
+
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
