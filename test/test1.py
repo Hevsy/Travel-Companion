@@ -3,7 +3,7 @@ import sys
 import logging
 from os import getcwd
 from flask import session
-import app.app as app
+from app.app import app
 
 sys.path.append("./app/*")
 print(sys.path)
@@ -12,35 +12,35 @@ print(getcwd)
 
 class TestPages(unittest.TestCase):
     def setUp(self):
-        app.app.testing = True
-        self.app = app.app.test_client()
+        app.testing = True
+        self.client = app.test_client()
 
     def test_home(self):
 
         """homepage test"""
-        result = self.app.get("/")
+        result = self.client.get("/")
 
     def test_register(self):
         """Register page test"""
-        result = self.app.get("/register")
+        result = self.client.get("/register")
 
     def test_login(self):
         """Login page test"""
-        result = self.app.get("/login")
+        result = self.client.get("/login")
 
     def test_logout(self):
         """Logout page test"""
-        result = self.app.get("/logout")
+        result = self.client.get("/logout")
 
     def test_pwdchange(self):
         """password change page test"""
-        result = self.app.get("/pwdchange")
+        result = self.client.get("/pwdchange")
 
     def test_dest(self):
         """Destinations page test"""
-        with self.app.session_transaction() as session:
+        with self.client.session_transaction() as session:
             session["user_id"] = "1"
-        result = self.app.get("/dest")
+        result = self.client.get("/dest")
 
 
 if __name__ == "__main__":
