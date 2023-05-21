@@ -29,4 +29,6 @@
     "python.linting.pylintEnabled": false,
     "python.linting.banditEnabled": false,
     "python.linting.mypyEnabled": false,
+    "python.envFile": "${workspaceFolder}/app/etc/.env",
+    "python.terminal.activateEnvInCurrentTerminal": true,
 }

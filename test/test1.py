@@ -3,12 +3,12 @@ import sys
 import logging
 from os import getcwd
 from flask import session
-from app.app import app
 
 sys.path.append("./app/*")
-print(sys.path)
 print(getcwd)
+print(sys.path)
 
+from app.app import app
 
 class TestPages(unittest.TestCase):
     def setUp(self):
@@ -18,7 +18,7 @@ class TestPages(unittest.TestCase):
     def test_home(self):
 
         """homepage test"""
-        result = self.client.get("/")
+        result = self.client.get("/") 
 
     def test_register(self):
         """Register page test"""
