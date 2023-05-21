@@ -10,7 +10,7 @@ from sqlalchemy import (
     Boolean,
 )
 from sqlalchemy_utils import database_exists, create_database
-from etc.config import db_config
+from app.etc.config import db_config
 
 
 def db_init():

@@ -8,6 +8,5 @@ COPY ./app/requirements.txt /
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 COPY ./app /app
-WORKDIR /app
 
-CMD ["gunicorn", "-w 4", "--bind", "127.0.0.1:8081", "app:app"]
+CMD ["gunicorn", "-w 4", "--bind", "127.0.0.1:8000", "app.app:app"]
