@@ -28,3 +28,7 @@
 LICENSE
 README.md
 **/*.db
+**/venv
+*.db
+venv
+flask_session
