@@ -4,7 +4,7 @@ name: Python/Flask unittest
 on: [push]
 
 jobs:
-  build:
+  unittest:
 
     runs-on: ubuntu-latest
     env:
@@ -46,3 +46,12 @@ jobs:
       - name: Test with unittest
         run: |
           python -m unittest discover -s ./test  -p 'test*.py'
+
+  container_build:
+    needs: unittest
+  
+  container_test:
+    needs: [unittest, container_build]
+  
+  container_push:
+    needs: [unittest, container_build, container_test]
